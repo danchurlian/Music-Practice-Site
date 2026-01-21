@@ -8,6 +8,8 @@ tk = verovio.toolkit()
 tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
 tk.setOptions({
     "inputFrom": "xml",
+    "svgViewBox": True,
+    "scale": 100,
 })
 
 current_scale: str = ""

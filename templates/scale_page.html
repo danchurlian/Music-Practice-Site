@@ -9,13 +9,15 @@
     <body>
         {% import 'utils.html' as utils %}
         {{ utils.header() }}
-        <div>Scale page</div>
+        <div>Scale identification practice</div>
         <form method="post">
             <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
                 What is this scale?
             </input>
         </form>
         {{ answer_result }}
-        {{ music_svg | safe }}
+        <section style="width:80%">
+            {{ music_svg | safe }}
+        </section>
     </body>
 </html>
