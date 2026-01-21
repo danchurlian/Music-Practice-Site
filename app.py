@@ -9,25 +9,57 @@ tk.setOptions({
     "inputFrom": "xml",
 })
 
+# assume that letter1 > letter2 (backwards for scale)
+def getHalfStepsAdjacentNotes(letter1: str, letter2: str):
+    if (letter1 == "F" and letter2 == "E"):
+        return 1
+    elif (letter1 == "C" and letter2 == "B"):
+        return 1
+    else:
+        return 2
+    
 
 def get_scale_xml(letter: str, mode: str) -> str:
     result: str = ""
     base: int = 65
     start_num: int = ord(letter) - base
+
+    curr_letter: str = letter
     curr_octave: int = 4
+    bonus: int = 0
 
-    # Major WWHWWWH OR 2212221, as length 7, do nothing at i == 0
-    # possible each loop num half steps from previous note, then sharp/flatten if needed
-    # creaitng a scale from the step model, more reliable
-
-    # list of all possible scales and their note-octave pairs, hard-coding way no good
+    SCALE_STEPS: list = []
+    if (mode == "major"):
+        SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1]
+    elif (mode == "minor"):
+        SCALE_STEPS = [2, 1, 2, 2, 2, 2, 1]
+    else:
+        raise ValueError("major or minor!")
 
     for i in range(8):
         # i is the scale-degree with 0-based indexing
+        prev_letter: str = curr_letter
         curr_letter_ascii = base + ((start_num + i) % 7) # formula
-        curr_letter: str = chr(curr_letter_ascii)
+        curr_letter = chr(curr_letter_ascii)
+
+        # increment the octave when the current letter is "C"
         if (i > 0 and curr_letter == "C"):
-            curr_octave += 1 # go up a higher octave if needed
+            curr_octave += 1
+        
+        # Adjust accidentals if needed
+        accidental_tag: str = ""
+        if (i > 0):
+            step: int = SCALE_STEPS[i-1] # step structure for the scale
+            dist: int = getHalfStepsAdjacentNotes(curr_letter, prev_letter) - bonus
+
+            if (dist > step):
+                accidental_tag = "<accidental>flat</accidental>"
+                bonus = -1
+            elif (dist < step):
+                accidental_tag = "<accidental>sharp</accidental>"
+                bonus = 1
+            else:
+                bonus = 0
 
         note_xml: str = f"""
 <note>
@@ -35,6 +67,7 @@ def get_scale_xml(letter: str, mode: str) -> str:
         <step>{curr_letter}</step>
         <octave>{curr_octave}</octave>
     </pitch>
+    {accidental_tag}
     <duration>1</duration>
     <type>quarter</type>
 </note>
@@ -80,7 +113,7 @@ def music_xml() -> str:
 @app.route("/scales")
 def scale_page():
     xml: str = music_xml()
-    xml = xml.replace("<NOTES />", get_scale_xml("C", "major"))
+    xml = xml.replace("<NOTES />", get_scale_xml("E", "major"))
     print(xml)
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
