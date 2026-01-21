@@ -24,7 +24,7 @@ def getHalfStepsAdjacentNotes(letter1: str, letter2: str):
         return 2
     
 
-def get_scale_xml(letter: str, mode: str) -> str:
+def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
     result: str = ""
     base: int = 65
     start_num: int = ord(letter) - base
@@ -32,6 +32,10 @@ def get_scale_xml(letter: str, mode: str) -> str:
     curr_letter: str = letter
     curr_octave: int = 4
     bonus: int = 0
+    if (accidental == "sharp"):
+        bonus = 1
+    elif (accidental == "flat"):
+        bonus = -1
 
     SCALE_STEPS: list = []
     if (mode == "major"):
@@ -52,20 +56,30 @@ def get_scale_xml(letter: str, mode: str) -> str:
             curr_octave += 1
         
         # Adjust accidentals if needed
-        accidental_tag: str = ""
+        curr_accidental: str = ""
         if (i > 0):
             step: int = SCALE_STEPS[i-1] # step structure for the scale
-            dist: int = getHalfStepsAdjacentNotes(curr_letter, prev_letter) - bonus
+            letter_dist: int = getHalfStepsAdjacentNotes(curr_letter, prev_letter) - bonus
 
-            if (dist > step):
-                accidental_tag = "<accidental>flat</accidental>"
+            if (letter_dist > step):
+                curr_accidental = "flat"
                 bonus = -1
-            elif (dist < step):
-                accidental_tag = "<accidental>sharp</accidental>"
+            elif (letter_dist - step == -2):
+                curr_accidental = "double-sharp"
+                bonus = 2
+            elif (letter_dist - step == -1):
+                curr_accidental = "sharp"
                 bonus = 1
             else:
                 bonus = 0
+        else:
+            # sharpen or flatten the first note, the tonic (C# major / minor for instance)
+            if (bonus == 1):
+                curr_accidental = "sharp"
+            elif (bonus == -1):
+                curr_accidental = "flat"
 
+        accidental_tag: str = f"<accidental>{curr_accidental}</accidental>" if curr_accidental != "" else ""
         note_xml: str = f"""
 <note>
     <pitch>
@@ -115,10 +129,58 @@ def music_xml() -> str:
 </score-partwise>
 """
 
+def get_random_scale_info() -> tuple:
+    # Bb, Eb, Ab, Db, Gb, Cb major -> (A B C D E G)b, no F flat
+    # Bb, Eb, Ab minor (A B E )b minor
+    # F#, C# major
+    # F#, C#, G#, D#, A# minor
+
+    # random letter and scale mode
+    random_scale_letter: str = chr(random.randint(65, 71)) 
+    random_mode: str = random.choice(["major", "minor"])
+
+    # random accidental
+    accidental_map = {
+        ("A", "major"): ["flat"],
+        ("A", "minor"): ["flat", "sharp"],
+        ("B", "major"): ["flat"],
+        ("B", "minor"): ["flat"],
+        ("C", "major"): ["flat", "sharp"],
+        ("C", "minor"): ["sharp"],
+        ("D", "major"): ["flat"],
+        ("D", "minor"): ["sharp"],
+        ("E", "major"): ["flat"],
+        ("E", "minor"): ["flat"],
+        ("F", "major"): ["sharp"],
+        ("F", "minor"): ["sharp"],
+        ("G", "major"): ["flat"],
+        ("G", "minor"): ["sharp"],
+    }
+    accidental_choices: list = accidental_map[(random_scale_letter, random_mode)]
+    accidental_choices.append(None)
+    # print(random_scale_letter, random_mode, accidental_choices)
+    random_accidental: str = None
+    if (len(accidental_choices) > 0):
+        random_accidental = random.choice(accidental_choices) 
+    return (random_scale_letter, random_mode, random_accidental)
+
+def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
+    result: str = ""
+    if (accidental == "sharp"):
+        result = f"{letter}# {mode}"
+    elif (accidental == "flat"):
+        result = f"{letter}b {mode}"
+    else:
+        result = f"{letter} {mode}"
+
+    return result
+
+
 @app.route("/scales", methods=["GET", "POST"])
 def scale_page():
     global current_scale
 
+    # evaluate user input
     answer_result: str = "Enter something..."
     if request.method == "POST":
         user_input: str = request.form.get('user_input')
@@ -128,16 +190,14 @@ def scale_page():
         else:
             answer_result = "You're wrong!"
 
-
-    # generating the rest of the page
-    random_scale_letter: str = chr(random.randint(65, 71)) 
-    random_mode: str = random.choice(["major", "minor"])
-    real_answer: str = f"{random_scale_letter} {random_mode}"
+    # generate random scale
+    (random_scale_letter, random_mode, random_accidental) = get_random_scale_info()
+    real_answer: str = format_scale_name(random_scale_letter, random_mode, random_accidental) 
     current_scale = real_answer
 
-
+    # render the scale on the page
     xml: str = music_xml()
-    xml = xml.replace("<NOTES />", get_scale_xml(random_scale_letter, random_mode))
+    xml = xml.replace("<NOTES />", get_scale_xml(random_scale_letter, random_mode, random_accidental))
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
     return render_template("scale_page.html", music_svg=music_svg, answer_result=answer_result)
