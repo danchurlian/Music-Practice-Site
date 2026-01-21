@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import verovio
 import os
+import random
 
 app = Flask(__name__)
 tk = verovio.toolkit()
@@ -8,6 +9,8 @@ tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
 tk.setOptions({
     "inputFrom": "xml",
 })
+
+current_scale: str = ""
 
 # assume that letter1 > letter2 (backwards for scale)
 def getHalfStepsAdjacentNotes(letter1: str, letter2: str):
@@ -110,14 +113,32 @@ def music_xml() -> str:
 </score-partwise>
 """
 
-@app.route("/scales")
+@app.route("/scales", methods=["GET", "POST"])
 def scale_page():
+    global current_scale
+
+    answer_result: str = "Enter something..."
+    if request.method == "POST":
+        user_input: str = request.form.get('user_input')
+
+        if (user_input == current_scale):
+            answer_result = "You're right!"
+        else:
+            answer_result = "You're wrong!"
+
+
+    # generating the rest of the page
+    random_scale_letter: str = chr(random.randint(65, 71)) 
+    random_mode: str = random.choice(["major", "minor"])
+    real_answer: str = f"{random_scale_letter} {random_mode}"
+    current_scale = real_answer
+
+
     xml: str = music_xml()
-    xml = xml.replace("<NOTES />", get_scale_xml("E", "major"))
-    print(xml)
+    xml = xml.replace("<NOTES />", get_scale_xml(random_scale_letter, random_mode))
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
-    return render_template("scale_page.html", music_svg=music_svg)
+    return render_template("scale_page.html", music_svg=music_svg, answer_result=answer_result)
 
 @app.route("/")
 def index():

@@ -10,6 +10,12 @@
         {% import 'utils.html' as utils %}
         {{ utils.header() }}
         <div>Scale page</div>
+        <form method="post">
+            <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
+                What is this scale?
+            </input>
+        </form>
+        {{ answer_result }}
         {{ music_svg | safe }}
     </body>
 </html>
