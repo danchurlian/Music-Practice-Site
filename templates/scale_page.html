@@ -10,10 +10,10 @@
         {% import 'utils.html' as utils %}
         {{ utils.header() }}
         <div>Scale identification practice</div>
+        <div>Example: "G# minor" or "Ab major" or "A# locrian"</div>
         <form method="post">
+            <label for="user_input">What is this scale?</label>
             <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
-                What is this scale?
-            </input>
         </form>
         {{ answer_result }}
         <section style="width:80%">

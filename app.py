@@ -42,6 +42,16 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
         SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1]
     elif (mode == "minor"):
         SCALE_STEPS = [2, 1, 2, 2, 2, 2, 1]
+    elif (mode == "dorian"):
+        SCALE_STEPS = [2, 1, 2, 2, 2, 1, 2]
+    elif (mode == "phrygian"):
+        SCALE_STEPS = [1, 2, 2, 2, 1, 2, 2]
+    elif (mode == "lydian"):
+        SCALE_STEPS = [2, 2, 2, 1, 2, 2, 1]
+    elif (mode == "mixolydian"):
+        SCALE_STEPS = [2, 2, 1, 2, 2, 1, 2]
+    elif (mode == "locrian"):
+        SCALE_STEPS = [1, 2, 2, 1, 2, 2, 2]
     else:
         raise ValueError("major or minor!")
 
@@ -130,40 +140,38 @@ def music_xml() -> str:
 """
 
 def get_random_scale_info() -> tuple:
-    # Bb, Eb, Ab, Db, Gb, Cb major -> (A B C D E G)b, no F flat
-    # Bb, Eb, Ab minor (A B E )b minor
-    # F#, C# major
-    # F#, C#, G#, D#, A# minor
-
     # random letter and scale mode
     random_scale_letter: str = chr(random.randint(65, 71)) 
-    random_mode: str = random.choice(["major", "minor"])
+    random_accidental: str = random.choice(["sharp", "flat", None])
+    key: str = (random_scale_letter, random_accidental)
+    black_listed_notes: list = [("B", "sharp"), ("E", "sharp"), ("F", "flat")]
 
-    # random accidental
-    accidental_map = {
-        ("A", "major"): ["flat"],
-        ("A", "minor"): ["flat", "sharp"],
-        ("B", "major"): ["flat"],
-        ("B", "minor"): ["flat"],
-        ("C", "major"): ["flat", "sharp"],
-        ("C", "minor"): ["sharp"],
-        ("D", "major"): ["flat"],
-        ("D", "minor"): ["sharp"],
-        ("E", "major"): ["flat"],
-        ("E", "minor"): ["flat"],
-        ("F", "major"): ["sharp"],
-        ("F", "minor"): ["sharp"],
-        ("G", "major"): ["flat"],
-        ("G", "minor"): ["sharp"],
+    # make sure to NOT choose 
+    while (key in black_listed_notes):
+        random_scale_letter = chr(random.randint(65, 71)) 
+        random_accidental = random.choice(["sharp", "flat", None])
+        key: str = (random_scale_letter, random_accidental)
+
+    mode_map = {
+        ("C", "flat"): ["major", "lydian"],
+        ("C", "sharp"): ["major", "dorian", "phrygian", "mixolydian", "locrian", "minor"],
+        ("D", "flat"): ["major", "dorian", "lydian", "mixolydian"],
+        ("D", "sharp"): ["dorian", "phrygian", "locrian", "minor"],
+        ("E", "flat"): ["major", "dorian", "phrygian", "lydian", "mixolydian", "minor"],
+        ("F", "sharp"): ["major", "dorian", "phrygian", "lydian", "mixolydian", "locrian", "minor"],
+        ("G", "flat"): ["major", "lydian", "mixolydian"],
+        ("G", "sharp"): ["dorian", "phrygian", "mixolydian", "locrian", "minor"],
+        ("A", "flat"): ["major", "dorian", "lydian", "mixolydian", "minor"],
+        ("A", "sharp"): ["phrygian", "locrian", "minor"],
+        ("B", "flat"): ["major", "dorian", "phrygian", "lydian", "mixolydian", "locrian", "minor"]
     }
-    accidental_choices: list = accidental_map[(random_scale_letter, random_mode)]
-    accidental_choices.append(None)
-    # print(random_scale_letter, random_mode, accidental_choices)
-    random_accidental: str = None
-    if (len(accidental_choices) > 0):
-        random_accidental = random.choice(accidental_choices) 
+    mode_list: list = mode_map[key] if key in mode_map else ["major", "dorian", "phrygian", "lydian", "mixolydian", "locrian", "minor"]
+    random_mode: str = random.choice(mode_list)
+
     return (random_scale_letter, random_mode, random_accidental)
 
+
+# Given a letter, accidental, and scale mode, format the name such as "F# minor"
 def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
     result: str = ""
     if (accidental == "sharp"):
@@ -192,8 +200,10 @@ def scale_page():
 
     # generate random scale
     (random_scale_letter, random_mode, random_accidental) = get_random_scale_info()
+    # (random_scale_letter, random_mode, random_accidental) = ("F", "locrian", "sharp")
     real_answer: str = format_scale_name(random_scale_letter, random_mode, random_accidental) 
     current_scale = real_answer
+    # print(real_answer)
 
     # render the scale on the page
     xml: str = music_xml()
