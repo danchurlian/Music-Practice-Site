@@ -194,16 +194,14 @@ def scale_page():
         user_input: str = request.form.get('user_input')
 
         if (user_input == current_scale):
-            answer_result = "You're right!"
+            answer_result = f"You're right! That was \"{current_scale}\"."
         else:
-            answer_result = "You're wrong!"
+            answer_result = f"You're wrong! The previous scale answer was \"{current_scale}\"."
 
     # generate random scale
     (random_scale_letter, random_mode, random_accidental) = get_random_scale_info()
-    # (random_scale_letter, random_mode, random_accidental) = ("F", "locrian", "sharp")
     real_answer: str = format_scale_name(random_scale_letter, random_mode, random_accidental) 
     current_scale = real_answer
-    # print(real_answer)
 
     # render the scale on the page
     xml: str = music_xml()
