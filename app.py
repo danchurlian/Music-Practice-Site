@@ -10,6 +10,11 @@ tk.setOptions({
     "inputFrom": "xml",
     "svgViewBox": True,
     "scale": 100,
+
+    "adjustPageHeight": True,
+    "adjustPageWidth": True,
+    "pageMarginTop": 0,
+    "pageMarginBottom": 0,
 })
 
 current_scale: str = ""
@@ -112,8 +117,6 @@ def music_xml() -> str:
 <score-partwise version="4.0">
     <part-list>
         <score-part id="P1">
-            <part-name>Scale</part-name>
-            <part-abbreviation>Scale</part-abbreviation>
         </score-part>
     </part-list>
     <part id="P1">

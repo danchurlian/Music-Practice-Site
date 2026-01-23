@@ -17,6 +17,9 @@ header a {
     font-size: 1.2rem;
 }
 
+main {
+    font-size: 1.1rem;
+}
 
 #scale_main {
     display: flex;
@@ -25,7 +28,6 @@ header a {
     color: rgb(48, 48, 48);
 }
 
-/* main div, main h1 {
-    font-family: Roboto, sans-serif;
-} */
-
+#scale_main div, form {
+    padding: .5rem 0;
+}

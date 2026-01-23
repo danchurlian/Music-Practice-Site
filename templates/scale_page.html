@@ -21,8 +21,9 @@
                 <label for="user_input">What is the scale below?</label>
                 <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
             </form>
-            {{ answer_result }}
-            <section style="width:80%">
+            <div>{{ answer_result }}</div>
+            
+            <section style="width:50%">
                 {{ music_svg | safe }}
             </section>
         </main>
