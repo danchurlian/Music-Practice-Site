@@ -1,0 +1,31 @@
+body {
+    margin: 0px;
+    font-family: Roboto, sans-serif;
+}
+
+header {
+    min-height: 8vh;
+    background-color: brown;
+
+    display: flex;
+    align-items: center;
+}
+header a {
+    color: white;
+    margin: 0 0.5em;
+    /* font-family: Roboto, sans-serif; */
+    font-size: 1.2rem;
+}
+
+
+#scale_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(48, 48, 48);
+}
+
+/* main div, main h1 {
+    font-family: Roboto, sans-serif;
+} */
+
