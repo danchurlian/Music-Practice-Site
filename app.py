@@ -47,6 +47,10 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
         SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1]
     elif (mode == "minor"):
         SCALE_STEPS = [2, 1, 2, 2, 2, 2, 1]
+    elif (mode == "harmonic minor"):
+        SCALE_STEPS = [2, 1, 2, 2, 1, 3, 1]
+    elif (mode == "natural minor"):
+        SCALE_STEPS = [2, 1, 2, 2, 1, 2, 2]
     elif (mode == "dorian"):
         SCALE_STEPS = [2, 1, 2, 2, 2, 1, 2]
     elif (mode == "phrygian"):
@@ -169,6 +173,11 @@ def get_random_scale_info() -> tuple:
         ("B", "flat"): ["major", "dorian", "phrygian", "lydian", "mixolydian", "locrian", "minor"]
     }
     mode_list: list = mode_map[key] if key in mode_map else ["major", "dorian", "phrygian", "lydian", "mixolydian", "locrian", "minor"]
+
+    # add other minor modes if possible
+    if mode_list[-1] == "minor":
+        mode_list.extend(["harmonic minor", "natural minor"])
+
     random_mode: str = random.choice(mode_list)
 
     return (random_scale_letter, random_mode, random_accidental)
