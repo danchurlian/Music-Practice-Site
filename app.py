@@ -195,6 +195,10 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
     return result
 
+@app.route("/chords", methods=["GET"])
+def chord_page():
+    return render_template("chord_page.html")
+
 
 @app.route("/scales", methods=["GET", "POST"])
 def scale_page():
@@ -221,6 +225,7 @@ def scale_page():
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
     return render_template("scale_page.html", music_svg=music_svg, answer_result=answer_result)
+
 
 @app.route("/")
 def index():
