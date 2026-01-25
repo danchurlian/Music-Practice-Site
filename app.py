@@ -3,6 +3,8 @@ import verovio
 import os
 import random
 
+from modules.NoteBuilder import NoteBuilder
+
 app = Flask(__name__)
 tk = verovio.toolkit()
 tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
@@ -197,7 +199,26 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
 @app.route("/chords", methods=["GET"])
 def chord_page():
-    return render_template("chord_page.html")
+    # C major
+    # Generate chords based on tuples (step, octave)
+    notes_xml: str = ""
+    notes_xml += NoteBuilder() \
+        .set_step("C") \
+        .set_octave(4) \
+        .set_note_type("whole") \
+        .build().get_xml()
+    
+    notes_xml += NoteBuilder() \
+        .set_step("E") \
+        .set_octave(4) \
+        .set_note_type("whole") \
+        .set_is_chord(True) \
+        .build().get_xml()
+
+    xml_template: str = music_xml().replace("<NOTES />", notes_xml)
+    tk.loadData(xml_template)
+    music_svg: str = tk.renderToSVG(1)
+    return render_template("chord_page.html", music_svg=music_svg)
 
 
 @app.route("/scales", methods=["GET", "POST"])

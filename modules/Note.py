@@ -1,0 +1,18 @@
+class Note(object):
+    def __init__(self, step: str, octave: int, note_type: str, is_chord: bool):
+        self.step = step
+        self.octave = octave
+        self.note_type = note_type
+        self.is_chord = is_chord
+
+    def get_xml(self) -> str:
+        return f"""
+<note>
+    {"<chord />" if self.is_chord is True else ""}
+    <pitch>
+        <step>{self.step}</step>
+        <octave>{self.octave}</octave>
+    </pitch>
+    <type>{self.note_type}</type>
+</note>
+"""
