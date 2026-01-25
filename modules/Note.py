@@ -4,6 +4,9 @@ class Note(object):
         self.octave = octave
         self.note_type = note_type
         self.is_chord = is_chord
+    
+    def __repr__(self):
+        return f"{self.step} {self.octave} {self.note_type} {self.is_chord}"
 
     def get_xml(self) -> str:
         return f"""

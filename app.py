@@ -197,23 +197,29 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
     return result
 
+
+
+def create_chord(chord_info: list[tuple]) -> str:
+    result_xml: str = ""
+    for i, info in enumerate(chord_info):
+        (step, octave) = info
+        should_add_chord_tag: bool = (i > 0)
+        new_note = NoteBuilder() \
+            .set_step(step) \
+            .set_octave(octave) \
+            .set_note_type("whole") \
+            .set_is_chord(should_add_chord_tag) \
+            .build()
+        result_xml += new_note.get_xml()
+
+    return result_xml
+
+
 @app.route("/chords", methods=["GET"])
 def chord_page():
     # C major
     # Generate chords based on tuples (step, octave)
-    notes_xml: str = ""
-    notes_xml += NoteBuilder() \
-        .set_step("C") \
-        .set_octave(4) \
-        .set_note_type("whole") \
-        .build().get_xml()
-    
-    notes_xml += NoteBuilder() \
-        .set_step("E") \
-        .set_octave(4) \
-        .set_note_type("whole") \
-        .set_is_chord(True) \
-        .build().get_xml()
+    notes_xml: str = create_chord([("C", 4), ("E", 4), ("G", 4)])
 
     xml_template: str = music_xml().replace("<NOTES />", notes_xml)
     tk.loadData(xml_template)
