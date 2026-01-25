@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="charset" content="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Music Practice Site</title>
+        <link href=" {{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <a href="/">Home</a>
+            <a href="/scales">Scale Practice</a>
+        </header>
+        <main>
+            {% block main %}
+            {% endblock %}
+        </main>
+        <footer>
+            <div> Copyright (c) 2026 by Daniel Chu. All rights reserved.  </div>
+        </footer>
+    </body>
+</html>

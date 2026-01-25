@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-
-<html lang="en">
-    {% import 'utils.html' as utils %}
-    <head>
-        <meta name="charset" content="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Music Practice Site</title>
-        <link href=" {{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
-
-        {{ utils.fonts() }}
-    </head>
-    <body>
-        {{ utils.header() }}
-        <main>
-            <h1>Music practice!</h1>
-        </main>
-        {{ utils.footer() }}
-    </body>
-</html>
+{% extends "layout.html" %}
+{% block main %}
+    <h1>Music practice!</h1>
+{% endblock %}

@@ -1,32 +1,16 @@
-
-<!DOCTYPE html>
-
-<html lang="en">
-    {% import 'utils.html' as utils %}
-    <head>
-        <meta name="charset" content="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Music Practice Site</title>
-
-        <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
-
-        {{ utils.fonts() }}
-    </head>
-    <body>
-        {{ utils.header() }}
-        <main id="scale_main">
-            <h1>Scale Identification Practice</h1>
-            <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div>
-            <form method="post">
-                <label for="user_input">What is the scale below?</label>
-                <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
-            </form>
-            <div>{{ answer_result }}</div>
-            
-            <section style="width:50%">
-                {{ music_svg | safe }}
-            </section>
-        </main>
-        {{ utils.footer() }}
-    </body>
-</html>
+{% extends "layout.html" %}
+{% block main %}
+    <section id="scale_main">
+        <h1>Scale Identification Practice</h1>
+        <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div>
+        <form method="post">
+            <label for="user_input">What is the scale below?</label>
+            <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
+        </form>
+        <div>{{ answer_result }}</div>
+        
+        <section style="width:50%">
+            {{ music_svg | safe }}
+        </section>
+    </section>
+{% endblock %}
