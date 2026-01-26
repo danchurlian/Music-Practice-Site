@@ -21,6 +21,7 @@ tk.setOptions({
 })
 
 current_scale: str = ""
+current_chord_answer: str = ""
 
 # assume that letter1 > letter2 (backwards for scale)
 # only works for letters next to each other
@@ -89,7 +90,6 @@ def get_note_info_by_intervals(letter: str, accidental: str, intervals: list[int
         # Adjust accidentals if needed
         curr_accidental: str = None
         letter_dist: int = get_letter_distance(curr_letter, prev_letter)
-        print(f"Letter {curr_letter} {prev_letter} bonus {bonus} Interval {interval} letter dist {letter_dist} after bonus {letter_dist - bonus}")
         letter_dist -= bonus
 
         if (letter_dist - interval == 1):
@@ -285,7 +285,6 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
 
 def create_chord(chord_info: list[tuple]) -> str:
-    print(chord_info)
     result_xml: str = ""
     for i, info in enumerate(chord_info):
         # Unpack from the info tuple
@@ -306,8 +305,18 @@ def create_chord(chord_info: list[tuple]) -> str:
     return result_xml
 
 
-@app.route("/chords", methods=["GET"])
+@app.route("/chords", methods=["GET", "POST"])
 def chord_page():
+    global current_chord_answer
+
+    # Handle user input
+    feedback: str = "Enter something in!"
+    if (request.method == "POST"):
+        user_answer: str = request.form.get("chord_answer")
+        if (current_chord_answer != ""):
+            feedback = "Correct!" if user_answer == current_chord_answer else "Wrong!"
+            feedback += f" The correct answer was \"{current_chord_answer}\""
+
     # Get random data
     interval_map = {
         "major": [4, 3],
@@ -315,11 +324,13 @@ def chord_page():
         "augmented": [4, 4],
         "diminished": [3, 3],
         "diminished 7th": [3, 3, 3],
+        "half-diminished 7th": [3, 3, 4],
     }
     random_letter: str = chr(64 + random.randint(1, 7))
     random_chord_name: str = random.choice(list(interval_map.keys()))
     random_interval_list: list = interval_map[random_chord_name]
-    print(random_letter, random_chord_name)
+    answer: str = f"{random_letter} {random_chord_name}"
+    current_chord_answer = answer
 
     # Generate the notes
     chord_info_list = get_note_info_by_intervals(random_letter, None, random_interval_list)
@@ -328,7 +339,7 @@ def chord_page():
     xml_template: str = music_xml().replace("<NOTES />", notes_xml)
     tk.loadData(xml_template)
     music_svg: str = tk.renderToSVG(1)
-    return render_template("chord_page.html", music_svg=music_svg)
+    return render_template("chord_page.html", music_svg=music_svg, feedback=feedback)
 
 
 @app.route("/scales", methods=["GET", "POST"])
