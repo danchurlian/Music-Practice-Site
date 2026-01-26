@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import verovio
 import os
 import random
+import math
 
 from modules.NoteBuilder import NoteBuilder
 
@@ -22,6 +23,7 @@ tk.setOptions({
 current_scale: str = ""
 
 # assume that letter1 > letter2 (backwards for scale)
+# only works for letters next to each other
 def getHalfStepsAdjacentNotes(letter1: str, letter2: str):
     if (letter1 == "F" and letter2 == "E"):
         return 1
@@ -29,6 +31,86 @@ def getHalfStepsAdjacentNotes(letter1: str, letter2: str):
         return 1
     else:
         return 2
+
+# assume letter1 > letter2
+def get_letter_distance(letter1: str, letter2: str):
+    result: int = 0
+    curr_ascii: int = ord(letter1)
+    next_ascii = (curr_ascii - 65 - 1) % 7 + 65
+
+
+    while curr_ascii != ord(letter2):
+        curr_dist = getHalfStepsAdjacentNotes(chr(curr_ascii), chr(next_ascii)) 
+        result += curr_dist
+        # print(chr(curr_ascii), chr(next_ascii), curr_dist)
+        curr_ascii = next_ascii
+        next_ascii = (next_ascii - 65 - 1) % 7 + 65
+
+    return result
+
+
+# Returns a list of tuples that look like this ("A", 4, "sharp") or ("C", 5, None)
+# 1st element represents the letter of the note.
+# 2nd element represents the octave of the note.
+# "None" accidental indicates natural.
+def get_note_info_by_intervals(letter: str, accidental: str, intervals: list[int]):
+
+    # Major [4, 3], 4 means 2 whole steps, 2 letters
+    # 3 means 1 whole step, 1 half step, 2 letters
+    # 1 whole step -> 1 letter up or down
+    # half step is tricky
+    # [C E G], [D F# A], [Db F Ab] These are test cases to try out
+
+    curr_letter: str = letter
+    curr_octave: int = 4
+    note_info_list: list = []
+
+    bonus: int = 0
+    if (accidental == "sharp"):
+        bonus = 1
+    elif (accidental == "flat"):
+        bonus = -1
+    
+    note_info_list.append((curr_letter, curr_octave, accidental))
+
+    for i in range(len(intervals)):
+        # Get the next letter based on the number of half steps
+        prev_letter: str = curr_letter
+        prev_num: int = ord(prev_letter) - 65
+        interval: int = intervals[i]
+        letter_offset: int = math.ceil(interval / 2)
+        curr_letter_ascii = 65 + ((prev_num + letter_offset) % 7) # formula
+        curr_letter = chr(curr_letter_ascii)
+
+        # increment the octave when the current letter is "C"
+        if (ord(prev_letter) < ord("C") and  curr_letter_ascii >= ord("C")):
+            curr_octave += 1
+        
+        # Adjust accidentals if needed
+        curr_accidental: str = None
+        letter_dist: int = get_letter_distance(curr_letter, prev_letter)
+        print(f"Letter {curr_letter} {prev_letter} bonus {bonus} Interval {interval} letter dist {letter_dist} after bonus {letter_dist - bonus}")
+        letter_dist -= bonus
+
+        if (letter_dist - interval == 1):
+            curr_accidental = "flat"
+            bonus = -1
+        elif (letter_dist - interval == 2):
+            curr_accidental = "flat-flat"
+            bonus = -2
+        elif (letter_dist - interval == -2):
+            curr_accidental = "double-sharp"
+            bonus = 2
+        elif (letter_dist - interval == -1):
+            curr_accidental = "sharp"
+            bonus = 1
+        else:
+            bonus = 0
+
+        info = (curr_letter, curr_octave, curr_accidental)
+        note_info_list.append(info)
+
+    return note_info_list
     
 
 def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
@@ -82,9 +164,12 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
             step: int = SCALE_STEPS[i-1] # step structure for the scale
             letter_dist: int = getHalfStepsAdjacentNotes(curr_letter, prev_letter) - bonus
 
-            if (letter_dist > step):
+            if (letter_dist - step == 1):
                 curr_accidental = "flat"
                 bonus = -1
+            elif (letter_dist - step == 2):
+                curr_accidental = "flat-flat"
+                bonus = -2
             elif (letter_dist - step == -2):
                 curr_accidental = "double-sharp"
                 bonus = 2
@@ -200,16 +285,22 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
 
 def create_chord(chord_info: list[tuple]) -> str:
+    print(chord_info)
     result_xml: str = ""
     for i, info in enumerate(chord_info):
-        (step, octave) = info
+        # Unpack from the info tuple
+        (step, octave, *rest) = info
+        accidental: str = rest[0] if len(rest) > 0 else None
+            
         should_add_chord_tag: bool = (i > 0)
         new_note = NoteBuilder() \
             .set_step(step) \
             .set_octave(octave) \
             .set_note_type("whole") \
+            .set_accidental(accidental) \
             .set_is_chord(should_add_chord_tag) \
             .build()
+
         result_xml += new_note.get_xml()
 
     return result_xml
@@ -217,9 +308,22 @@ def create_chord(chord_info: list[tuple]) -> str:
 
 @app.route("/chords", methods=["GET"])
 def chord_page():
-    # C major
-    # Generate chords based on tuples (step, octave)
-    notes_xml: str = create_chord([("C", 4), ("E", 4), ("G", 4)])
+    # Get random data
+    interval_map = {
+        "major": [4, 3],
+        "minor": [3, 4],
+        "augmented": [4, 4],
+        "diminished": [3, 3],
+        "diminished 7th": [3, 3, 3],
+    }
+    random_letter: str = chr(64 + random.randint(1, 7))
+    random_chord_name: str = random.choice(list(interval_map.keys()))
+    random_interval_list: list = interval_map[random_chord_name]
+    print(random_letter, random_chord_name)
+
+    # Generate the notes
+    chord_info_list = get_note_info_by_intervals(random_letter, None, random_interval_list)
+    notes_xml: str = create_chord(chord_info_list)
 
     xml_template: str = music_xml().replace("<NOTES />", notes_xml)
     tk.loadData(xml_template)

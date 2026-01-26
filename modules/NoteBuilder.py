@@ -5,6 +5,7 @@ class NoteBuilder(object):
         self.step = "C"
         self.octave = 4
         self.note_type = "quarter"
+        self.accidental = None 
         self.is_chord = False
     
     def set_step(self, step: str):
@@ -23,5 +24,9 @@ class NoteBuilder(object):
         self.is_chord = is_chord
         return self
 
+    def set_accidental(self, accidental: str):
+        self.accidental = accidental
+        return self
+
     def build(self):
-        return Note(self.step, self.octave, self.note_type, self.is_chord)
+        return Note(self.step, self.octave, self.note_type, self.is_chord, self.accidental)
