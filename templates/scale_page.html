@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block main %}
-    <section id="scale_main">
+    <section class="main_content" id="scale_main">
         <h1>Scale Identification Practice</h1>
         <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div>
         <form method="post">
@@ -9,7 +9,7 @@
         </form>
         <div>{{ answer_result }}</div>
         
-        <section style="width:50%">
+        <section style="width:50vw">
             {{ music_svg | safe }}
         </section>
     </section>

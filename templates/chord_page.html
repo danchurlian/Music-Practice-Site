@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% block main %}
-    <h1>Chord Identification Practice </h1>
-    {{ music_svg | safe }}
+    <section class="main_content">
+        <h1>Chord Identification Practice </h1>
+        <section style="width:50%">
+            {{ music_svg | safe }}
+        </section>
+    </section>
 {% endblock %}

@@ -41,10 +41,13 @@ main {
     flex-grow: 1;
 }
 
-#scale_main {
+.main_content {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#scale_main {
     color: rgb(48, 48, 48);
 }
 
