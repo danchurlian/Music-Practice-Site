@@ -39,6 +39,7 @@ main {
     min-height: 100vh;
     font-size: 1.1rem;
     flex-grow: 1;
+    color: rgb(48, 48, 48);
 }
 
 .main_content {
@@ -47,9 +48,6 @@ main {
     align-items: center;
 }
 
-#scale_main {
-    color: rgb(48, 48, 48);
-}
 
 #scale_main div, form {
     padding: .5rem 0;
