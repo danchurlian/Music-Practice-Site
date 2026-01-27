@@ -17,6 +17,10 @@ header a {
     color: white;
     margin: 0 0.5rem;
     font-size: 1.2rem;
+    text-decoration: none;
+}
+header a:hover {
+    text-decoration: underline;
 }
 
 footer {
