@@ -282,6 +282,17 @@ def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
 
     return result
 
+def format_chord_name(letter: str, accidental: str, chord_name: str):
+    result: str = f"{letter}"
+    if (accidental == "sharp"):
+        result += "#"
+    elif (accidental == "flat"):
+        result += "b"
+    
+    result += f" {chord_name}"
+
+    return result
+
 
 
 def create_chord(chord_info: list[tuple]) -> str:
@@ -317,8 +328,22 @@ def chord_page():
             feedback = "Correct!" if user_answer == current_chord_answer else "Wrong!"
             feedback += f" The correct answer was \"{current_chord_answer}\""
 
-    # Get random data
-    interval_map = {
+    possible_chords: dict = {
+        ("C", "flat"): ["major", "augmented"],
+        ("C", "sharp"): ["major", "minor", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("D", "flat"): ["major", "augmented"],
+        ("D", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("E", "flat"): ["major", "minor", "augmented", "diminished"],
+        ("E", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
+        ("F", "flat"): ["augmented"],
+        ("G", "flat"): ["major", "augmented"],
+        ("G", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("A", "flat"): ["major", "minor", "augmented"],
+        ("A", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("B", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
+    }
+
+    interval_map: dict = {
         "major": [4, 3],
         "minor": [3, 4],
         "augmented": [4, 4],
@@ -327,13 +352,19 @@ def chord_page():
         "half-diminished 7th": [3, 3, 4],
     }
     random_letter: str = chr(64 + random.randint(1, 7))
-    random_chord_name: str = random.choice(list(interval_map.keys()))
+    random_accidental: int = random.choice(["flat", "sharp", None])
+    key = (random_letter, random_accidental)
+    
+    # Get a random chord and generate the intervals
+    possible_chord_list: list = list(interval_map.keys()) if (key not in possible_chords) else possible_chords[key]
+    random_chord_name: str = random.choice(possible_chord_list)
+
     random_interval_list: list = interval_map[random_chord_name]
-    answer: str = f"{random_letter} {random_chord_name}"
+    answer: str = format_chord_name(*key, random_chord_name)
     current_chord_answer = answer
 
     # Generate the notes
-    chord_info_list = get_note_info_by_intervals(random_letter, None, random_interval_list)
+    chord_info_list = get_note_info_by_intervals(*key, random_interval_list)
     notes_xml: str = create_chord(chord_info_list)
 
     xml_template: str = music_xml().replace("<NOTES />", notes_xml)
