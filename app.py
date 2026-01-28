@@ -329,17 +329,17 @@ def chord_page():
             feedback += f" The correct answer was \"{current_chord_answer}\""
 
     possible_chords: dict = {
-        ("C", "flat"): ["major", "augmented"],
-        ("C", "sharp"): ["major", "minor", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("D", "flat"): ["major", "augmented"],
-        ("D", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("E", "flat"): ["major", "minor", "augmented", "diminished"],
+        ("C", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
+        ("C", "sharp"): ["major", "major 7th", "dominant 7th", "minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("D", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
+        ("D", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("E", "flat"): ["major", "major 7th", "dominant 7th", "minor", "augmented", "diminished"],
         ("E", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
         ("F", "flat"): ["augmented"],
-        ("G", "flat"): ["major", "augmented"],
-        ("G", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("A", "flat"): ["major", "minor", "augmented"],
-        ("A", "sharp"): ["minor", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("G", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
+        ("G", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
+        ("A", "flat"): ["major", "major 7th", "dominant 7th", "minor", "minor 7th",  "augmented"],
+        ("A", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
         ("B", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
     }
 
@@ -350,6 +350,9 @@ def chord_page():
         "diminished": [3, 3],
         "diminished 7th": [3, 3, 3],
         "half-diminished 7th": [3, 3, 4],
+        "major 7th": [4, 3, 4],
+        "dominant 7th": [4, 3, 3],
+        "minor 7th": [3, 4, 3],
     }
     random_letter: str = chr(64 + random.randint(1, 7))
     random_accidental: int = random.choice(["flat", "sharp", None])
