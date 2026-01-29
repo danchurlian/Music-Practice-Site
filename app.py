@@ -114,44 +114,42 @@ def get_note_info_by_intervals(letter: str, accidental: str, intervals: list[int
     
 
 def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
+    scale_map: dict = {
+        "major": [2, 2, 1, 2, 2, 2, 1],
+        "minor": [2, 1, 2, 2, 2, 2, 1],
+        "harmonic minor": [2, 1, 2, 2, 1, 3, 1],
+        "natural minor": [2, 1, 2, 2, 1, 2, 2],
+        "dorian": [2, 1, 2, 2, 2, 1, 2],
+        "phrygian": [1, 2, 2, 2, 1, 2, 2],
+        "lydian": [2, 2, 2, 1, 2, 2, 1], 
+        "mixolydian": [2, 2, 1, 2, 2, 1, 2],
+        "locrian": [1, 2, 2, 1, 2, 2, 2],
+    }
+    assert (mode in scale_map), f"Invalid mode {mode}"
+    SCALE_STEPS: list = scale_map[mode]
+    
+    # info_list: list = get_note_info_by_intervals(letter, accidental, SCALE_STEPS)
+    # for info in info_list:
+    #     (curr_letter, curr_octave, curr_accidental) = info
+    #     note = NoteBuilder() \
+    #         .set_step(curr_letter) \
+    #         .set_octave(curr_octave) \
+    #         .set_accidental(curr_accidental) \
+    #         .build()
+    #     result += note.get_xml()
+
     result: str = ""
-    base: int = 65
-    start_num: int = ord(letter) - base
+    BASE_ASCII: int = 65
+    TONIC_ASCII: int = ord(letter) - BASE_ASCII
 
     curr_letter: str = letter
     curr_octave: int = 4
-    bonus: int = 0
-    if (accidental == "sharp"):
-        bonus = 1
-    elif (accidental == "flat"):
-        bonus = -1
-
-    SCALE_STEPS: list = []
-    if (mode == "major"):
-        SCALE_STEPS = [2, 2, 1, 2, 2, 2, 1]
-    elif (mode == "minor"):
-        SCALE_STEPS = [2, 1, 2, 2, 2, 2, 1]
-    elif (mode == "harmonic minor"):
-        SCALE_STEPS = [2, 1, 2, 2, 1, 3, 1]
-    elif (mode == "natural minor"):
-        SCALE_STEPS = [2, 1, 2, 2, 1, 2, 2]
-    elif (mode == "dorian"):
-        SCALE_STEPS = [2, 1, 2, 2, 2, 1, 2]
-    elif (mode == "phrygian"):
-        SCALE_STEPS = [1, 2, 2, 2, 1, 2, 2]
-    elif (mode == "lydian"):
-        SCALE_STEPS = [2, 2, 2, 1, 2, 2, 1]
-    elif (mode == "mixolydian"):
-        SCALE_STEPS = [2, 2, 1, 2, 2, 1, 2]
-    elif (mode == "locrian"):
-        SCALE_STEPS = [1, 2, 2, 1, 2, 2, 2]
-    else:
-        raise ValueError("major or minor!")
+    bonus: int = 1 if (accidental == "sharp") else -1 if (accidental == "flat") else 0
 
     for i in range(8):
         # i is the scale-degree with 0-based indexing
         prev_letter: str = curr_letter
-        curr_letter_ascii = base + ((start_num + i) % 7) # formula
+        curr_letter_ascii = BASE_ASCII + ((TONIC_ASCII + i) % 7) # formula
         curr_letter = chr(curr_letter_ascii)
 
         # increment the octave when the current letter is "C"
@@ -159,7 +157,7 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
             curr_octave += 1
         
         # Adjust accidentals if needed
-        curr_accidental: str = ""
+        curr_accidental: str = None
         if (i > 0):
             step: int = SCALE_STEPS[i-1] # step structure for the scale
             letter_dist: int = getHalfStepsAdjacentNotes(curr_letter, prev_letter) - bonus
@@ -185,18 +183,12 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
             elif (bonus == -1):
                 curr_accidental = "flat"
 
-        accidental_tag: str = f"<accidental>{curr_accidental}</accidental>" if curr_accidental != "" else ""
-        note_xml: str = f"""
-<note>
-    <pitch>
-        <step>{curr_letter}</step>
-        <octave>{curr_octave}</octave>
-    </pitch>
-    {accidental_tag}
-    <duration>1</duration>
-    <type>quarter</type>
-</note>
-"""
+        note = NoteBuilder() \
+            .set_step(curr_letter) \
+            .set_octave(curr_octave) \
+            .set_accidental(curr_accidental) \
+            .build()
+        note_xml: str = note.get_xml()
         result += note_xml
     return result
 
