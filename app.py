@@ -22,6 +22,7 @@ tk.setOptions({
 
 current_scale: str = ""
 current_chord_answer: str = ""
+current_pitch_answer: int = None
 
 # assume that letter1 > letter2 (backwards for scale)
 # only works for letters next to each other
@@ -307,6 +308,61 @@ def create_chord(chord_info: list[tuple]) -> str:
 
     return result_xml
 
+# note_name can be "C#" or "Db" or "A"
+def get_note_code(note_name: str) -> int:
+    map: dict = {
+        "B#": 1,
+        "C": 1,
+        "C#": 2,
+        "Db": 2,
+        "D": 3,
+        "D#": 4,
+        "Eb": 4,
+        "E": 5,
+        "Fb": 5,
+        "E#": 6,
+        "F": 6,
+        "F#": 7,
+        "Gb": 7,
+        "G": 8,
+        "G#": 9,
+        "Ab": 9,
+        "A": 10,
+        "A#": 11,
+        "Bb": 11,
+        "B": 12,
+        "Cb": 12,
+    }
+    if (note_name not in map):
+        raise ValueError()
+    return map[note_name]
+
+
+@app.route("/pitch-audio", methods=["GET", "POST"])
+def pitch_audio_page():
+    global current_pitch_answer
+    feedback: str = ""
+
+    if (request.method == "POST"):
+        correct: bool = True
+        user_input: str = request.form.get("user_answer")
+        try:
+            user_code: int = get_note_code(user_input)
+            correct = user_code == current_pitch_answer
+            print(f"User input {user_input} | note code {user_code}")
+        except ValueError:
+            correct = False 
+
+        if (correct is True):
+            feedback = f"Correct! That was an \"{user_input}\"."
+        else:
+            feedback = "Wrong!"
+        
+    reference_code: int = 1 # middle C
+    random_code: int = random.randint(1, 12)
+    current_pitch_answer = random_code
+    
+    return render_template("pitch_audio_page.html", reference_code=reference_code, random_code=random_code, feedback=feedback)
 
 @app.route("/chords", methods=["GET", "POST"])
 def chord_page():

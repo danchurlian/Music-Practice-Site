@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<section class="main_content">
+    <h1>Pitch Identification Practice</h1>
+
+    <div>{{ reference_code }}</div>
+    <div>{{ random_code }}</div>
+    <div>{{ feedback }} </div>
+    <form method="POST">
+        <input name="user_answer" autofocus="true" required="true" />
+    </form>
+</section>
+{% endblock %}
