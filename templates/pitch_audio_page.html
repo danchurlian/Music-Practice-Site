@@ -4,11 +4,19 @@
 <section class="main_content">
     <h1>Pitch Identification Practice</h1>
 
-    <div>{{ reference_code }}</div>
-    <div>{{ random_code }}</div>
+    <!-- <div>{{ reference_code }}</div>
+    <div>{{ random_code }}</div> -->
     <div>{{ feedback }} </div>
+    <figure>
+        <figcaption>Reference Note: C</figcaption>
+        <audio controls src="{{ url_for('static', filename='note1.mp3') }}"></audio>
+    </figure>
+    <figure>
+        <figcaption>What is this pitch?</figcaption>
+        <audio controls src="{{ url_for('static', filename=audio_file_name)}}"></audio>
+    </figure>
     <form method="POST">
-        <input name="user_answer" autofocus="true" required="true" />
+        <input name="user_answer" autocomplete="off" autofocus="true" required="true" />
     </form>
 </section>
 {% endblock %}

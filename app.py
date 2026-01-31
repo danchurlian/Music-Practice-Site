@@ -354,15 +354,16 @@ def pitch_audio_page():
             correct = False 
 
         if (correct is True):
-            feedback = f"Correct! That was an \"{user_input}\"."
+            feedback = f"Correct! That was a(n) \"{user_input}\"."
         else:
             feedback = "Wrong!"
         
     reference_code: int = 1 # middle C
     random_code: int = random.randint(1, 12)
     current_pitch_answer = random_code
+    audio_file_name: str = f"note{random_code}.mp3"
     
-    return render_template("pitch_audio_page.html", reference_code=reference_code, random_code=random_code, feedback=feedback)
+    return render_template("pitch_audio_page.html", reference_code=reference_code, random_code=random_code, feedback=feedback, audio_file_name=audio_file_name)
 
 @app.route("/chords", methods=["GET", "POST"])
 def chord_page():
@@ -374,7 +375,7 @@ def chord_page():
         user_answer: str = request.form.get("chord_answer")
         if (current_chord_answer != ""):
             feedback = "Correct!" if user_answer == current_chord_answer else "Wrong!"
-            feedback += f" The correct answer was \"{current_chord_answer}\""
+            feedback += f" The correct answer was \"{current_chord_answer}\"."
 
     possible_chords: dict = {
         ("C", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
