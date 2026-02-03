@@ -16,6 +16,7 @@
         <audio controls src="{{ url_for('static', filename=audio_file_name)}}"></audio>
     </figure>
     <form method="POST">
+        <label for="user_answer">Note name: </label>
         <input name="user_answer" autocomplete="off" autofocus="true" required="true" />
     </form>
 </section>

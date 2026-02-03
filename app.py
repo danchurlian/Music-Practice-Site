@@ -337,6 +337,27 @@ def get_note_code(note_name: str) -> int:
         raise ValueError()
     return map[note_name]
 
+# Used only to display the right answer in on the pitch audio page
+def get_note_name_from_code(code: int) -> str:
+    note_name_list: list = [
+        None,
+        "C or B#",
+        "C# or Db",
+        "D",
+        "D# or Eb",
+        "E or Fb",
+        "F or E#",
+        "F# or Gb",
+        "G",
+        "G# or Ab",
+        "A",
+        "A# or Bb",
+        "B or Cb",
+    ]
+    result: str = None
+    assert (code > 0 and code < len(note_name_list), f"Invalid note code {code}")
+    result = note_name_list[code]
+    return result
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
@@ -353,10 +374,8 @@ def pitch_audio_page():
         except ValueError:
             correct = False 
 
-        if (correct is True):
-            feedback = f"Correct! That was a(n) \"{user_input}\"."
-        else:
-            feedback = "Wrong!"
+        feedback = "Correct!" if correct is True else "Wrong!"
+        feedback += f" That was a(n) {get_note_name_from_code(current_pitch_answer)}." if current_pitch_answer is not None else ""
         
     reference_code: int = 1 # middle C
     random_code: int = random.randint(1, 12)
