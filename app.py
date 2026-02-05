@@ -359,6 +359,13 @@ def get_note_name_from_code(code: int) -> str:
     result = note_name_list[code]
     return result
 
+
+@app.route("/key-signature", methods=["GET", "POST"])
+def key_signature_page():
+    music_svg: str = "<svg></svg>"
+    return render_template("key_signature_page.html", music_svg=music_svg)
+
+
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
     global current_pitch_answer
