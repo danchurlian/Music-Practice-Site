@@ -360,9 +360,75 @@ def get_note_name_from_code(code: int) -> str:
     return result
 
 
+def get_key_signature_xml(fifths_number: int) -> str:
+    xml_template: str = f"""
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+    <part-list>
+        <score-part id="P1">
+        </score-part>
+    </part-list>
+    <part id="P1">
+        <measure number="1">
+            <attributes>
+                <divisions>1</divisions>
+                <key>
+                    <fifths>{fifths_number}</fifths>
+                </key>
+                <staves>1</staves>
+                <clef number="1">
+                    <sign>G</sign>
+                    <line>2</line>
+                </clef>
+            </attributes>
+        </measure>
+    </part>
+</score-partwise>
+"""
+    return xml_template
+
+
+def get_key_signature_info(fifths_number: int) -> list:
+    map: dict = {
+        -7: ["Cb", "Ab"],
+        -6: ["Gb", "Eb"],
+        -5: ["Db", "Bb"],
+        -4: ["Ab", "F"],
+        -3: ["Eb", "C"],
+        -2: ["Bb", "G"],
+        -1: ["F", "D"],
+        0: ["C", "A"],
+        1: ["G", "E"],
+        2: ["D", "B"],
+        3: ["A", "F#"],
+        4: ["E", "C#"],
+        5: ["B", "G#"],
+        6: ["F#", "D#"],
+        7: ["C#", "A#"],
+    }
+    assert fifths_number in map, f"Invalid fifths_number {fifths_number}"
+    return map[fifths_number]
+
+
+# Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature", methods=["GET", "POST"])
 def key_signature_page():
-    music_svg: str = "<svg></svg>"
+    # Generate a random fifths number
+    fifths_number: int = random.randint(-7, 7)
+    accidental_using: str = "sharp" if fifths_number >= 0 else "flat"
+
+    # Get ansewrs based on the fifths number
+    key_sig_info = get_key_signature_info(fifths_number)
+    major_key_answer: str = f"{key_sig_info[0]} major" 
+    minor_key_answer: str = f"{key_sig_info[1]} minor"
+
+    print(f"{abs(fifths_number)} {accidental_using}s")
+    print(f"{major_key_answer} | {minor_key_answer}")
+
+    xml: str = get_key_signature_xml(fifths_number)
+    tk.loadData(xml)
+    music_svg: str = tk.renderToSVG(1)
     return render_template("key_signature_page.html", music_svg=music_svg)
 
 
