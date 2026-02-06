@@ -23,6 +23,8 @@ tk.setOptions({
 current_scale: str = ""
 current_chord_answer: str = ""
 current_pitch_answer: int = None
+current_major_key_answer: str = ""
+current_minor_key_answer: str = ""
 
 # assume that letter1 > letter2 (backwards for scale)
 # only works for letters next to each other
@@ -414,12 +416,26 @@ def get_key_signature_info(fifths_number: int) -> list:
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature", methods=["GET", "POST"])
 def key_signature_page():
+    global current_major_key_answer, current_minor_key_answer
+    feedback_content: str = "Enter something!"
 
     # If the user responded, get the user's input.
     if request.method == "POST":
-        user_major_input: str = request.form.get("major_key_name")
-        user_minor_input: str = request.form.get("minor_key_name")
+        user_major_input: str = request.form.get("major_key_name").strip()
+        user_minor_input: str = request.form.get("minor_key_name").strip()
         print(f"User entered {user_major_input} {user_minor_input}")
+
+        # Check if the user's input matches the global variables at the top
+        # Change the feedback content depending correct or not.
+        user_is_correct: bool = user_major_input == current_major_key_answer and user_minor_input == current_minor_key_answer
+        feedback_content = "Correct!" if user_is_correct is True else "Wrong!"
+        
+        feedback_content += f" That was {current_major_key_answer} and {current_minor_key_answer}."
+
+    else:
+        current_major_key_answer = ""
+        current_minor_key_answer = ""
+
 
     # Generate a random fifths number
     fifths_number: int = random.randint(-7, 7)
@@ -429,14 +445,18 @@ def key_signature_page():
     key_sig_info = get_key_signature_info(fifths_number)
     major_key_answer: str = f"{key_sig_info[0]} major" 
     minor_key_answer: str = f"{key_sig_info[1]} minor"
+    current_major_key_answer = major_key_answer
+    current_minor_key_answer = minor_key_answer
 
+    # Logging
     print(f"{abs(fifths_number)} {accidental_using}s")
-    print(f"{major_key_answer} | {minor_key_answer}")
+    print(f"{current_major_key_answer} | {current_minor_key_answer}")
 
+    # Render the key signature as an svg and render the html page 
     xml: str = get_key_signature_xml(fifths_number)
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
-    return render_template("key_signature_page.html", music_svg=music_svg)
+    return render_template("key_signature_page.html", feedback=feedback_content, music_svg=music_svg)
 
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
