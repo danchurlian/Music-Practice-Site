@@ -66,3 +66,8 @@ tr:nth-child(even) {
 tr:nth-child(odd) {
     background-color:rgb(238, 238, 238);
 }
+
+form button {
+    min-height: 2.5rem;
+    min-width: 3.5rem;
+}

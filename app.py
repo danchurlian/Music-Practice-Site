@@ -414,6 +414,13 @@ def get_key_signature_info(fifths_number: int) -> list:
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature", methods=["GET", "POST"])
 def key_signature_page():
+
+    # If the user responded, get the user's input.
+    if request.method == "POST":
+        user_major_input: str = request.form.get("major_key_name")
+        user_minor_input: str = request.form.get("minor_key_name")
+        print(f"User entered {user_major_input} {user_minor_input}")
+
     # Generate a random fifths number
     fifths_number: int = random.randint(-7, 7)
     accidental_using: str = "sharp" if fifths_number >= 0 else "flat"

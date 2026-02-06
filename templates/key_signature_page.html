@@ -3,6 +3,13 @@
 {% block main %}
 <section class="main_content">
     <h1>Key Signature Identification Practice</h1>
+    <form method="post">
+        <label for="major_key_name">Major key name</label>
+        <input name="major_key_name" autofocus="true" required="true" autocomplete="off"></input>
+        <label for="minor_key_name">Minor key name</label>
+        <input name="minor_key_name" autofocus="true" required="true" autocomplete="off"></input>
+        <button type="submit">Submit</button>
+    </form>
     {{ music_svg | safe }}
 </section>
 {% endblock %}
