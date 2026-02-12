@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from jinja2 import Environment, Template, PackageLoader
 import verovio
 import os
 import random
@@ -19,6 +20,10 @@ tk.setOptions({
     "pageMarginTop": 0,
     "pageMarginBottom": 0,
 })
+
+jinja_env: Environment = Environment(
+    loader=PackageLoader("app")
+)
 
 current_scale: str = ""
 current_chord_answer: str = ""
@@ -128,7 +133,7 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
         "mixolydian": [2, 2, 1, 2, 2, 1, 2],
         "locrian": [1, 2, 2, 1, 2, 2, 2],
     }
-    assert (mode in scale_map), f"Invalid mode {mode}"
+    assert mode in scale_map, f"Invalid mode {mode}"
     SCALE_STEPS: list = scale_map[mode]
     
     # info_list: list = get_note_info_by_intervals(letter, accidental, SCALE_STEPS)
@@ -196,37 +201,10 @@ def get_scale_xml(letter: str, mode: str, accidental: str = None) -> str:
     return result
 
 
-def music_xml() -> str:
-    return f"""
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
-<score-partwise version="4.0">
-    <part-list>
-        <score-part id="P1">
-        </score-part>
-    </part-list>
-    <part id="P1">
-        <measure number="1">
-            <attributes>
-                <divisions>1</divisions>
-                <key>
-                    <fifths>0</fifths>
-                </key>
-                <time>
-                    <beats>4</beats>
-                    <beat-type>4</beat-type>
-                </time>
-                <staves>1</staves>
-                <clef number="1">
-                    <sign>G</sign>
-                    <line>2</line>
-                </clef>
-            </attributes>
-            <NOTES />
-        </measure>
-    </part>
-</score-partwise>
-"""
+# called by chord_page() and scale_page()
+def music_single_staff_xml(notes_xml: str) -> str:
+    template: Template = jinja_env.get_template("single_staff_template.xml")
+    return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 def get_random_scale_info() -> tuple:
     # random letter and scale mode
@@ -363,32 +341,13 @@ def get_note_name_from_code(code: int) -> str:
 
 
 def get_key_signature_xml(fifths_number: int) -> str:
-    xml_template: str = f"""
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
-<score-partwise version="4.0">
-    <part-list>
-        <score-part id="P1">
-        </score-part>
-    </part-list>
-    <part id="P1">
-        <measure number="1">
-            <attributes>
-                <divisions>1</divisions>
-                <key>
-                    <fifths>{fifths_number}</fifths>
-                </key>
-                <staves>1</staves>
-                <clef number="1">
-                    <sign>G</sign>
-                    <line>2</line>
-                </clef>
-            </attributes>
-        </measure>
-    </part>
-</score-partwise>
-"""
-    return xml_template
+    template: Template = jinja_env.get_template("single_staff_template.xml") 
+    return template.render(attributes=f"""
+<divisions>1</divisions>
+<key>
+    <fifths>{fifths_number}</fifths>
+</key>
+    """)
 
 
 def get_key_signature_info(fifths_number: int) -> list:
@@ -534,14 +493,18 @@ def chord_page():
     answer: str = format_chord_name(*key, random_chord_name)
     current_chord_answer = answer
 
-    # Generate the notes
+    # Generate the notes and render
     chord_info_list = get_note_info_by_intervals(*key, random_interval_list)
     notes_xml: str = create_chord(chord_info_list)
 
-    xml_template: str = music_xml().replace("<NOTES />", notes_xml)
-    tk.loadData(xml_template)
+    xml: str = music_single_staff_xml(notes_xml)
+    tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
-    return render_template("chord_page.html", music_svg=music_svg, feedback=feedback)
+
+    return render_template(
+        "chord_page.html", 
+        music_svg=music_svg, 
+        feedback=feedback)
 
 
 @app.route("/scales", methods=["GET", "POST"])
@@ -564,11 +527,19 @@ def scale_page():
     current_scale = real_answer
 
     # render the scale on the page
-    xml: str = music_xml()
-    xml = xml.replace("<NOTES />", get_scale_xml(random_scale_letter, random_mode, random_accidental))
+    notes_xml: str = get_scale_xml(
+        random_scale_letter, 
+        random_mode, 
+        random_accidental)
+
+    xml: str = music_single_staff_xml(notes_xml)
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
-    return render_template("scale_page.html", music_svg=music_svg, answer_result=answer_result)
+
+    return render_template(
+        "scale_page.html", 
+        music_svg=music_svg, 
+        answer_result=answer_result)
 
 
 @app.route("/")
