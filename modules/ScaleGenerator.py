@@ -14,6 +14,19 @@ SCALE_MAP: dict = {
     "locrian": [1, 2, 2, 1, 2, 2, 2],
 }
 
+
+# Given a letter, accidental, and scale mode, format the name such as "F# minor"
+def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
+    result: str = ""
+    if (accidental == "sharp"):
+        result = f"{letter}# {mode}"
+    elif (accidental == "flat"):
+        result = f"{letter}b {mode}"
+    else:
+        result = f"{letter} {mode}"
+    return result
+
+
 def get_random_scale_info() -> tuple:
         # random letter and scale mode
         random_scale_letter: str = chr(random.randint(65, 71)) 
@@ -52,12 +65,17 @@ def get_random_scale_info() -> tuple:
 
 
 class ScaleInfo(object):
-    def __init__(self, start_letter: str, scale_mode: str, start_accidental: str, xml: str):
+    def __init__(self, start_letter: str,
+                scale_mode: str, 
+                start_accidental: str, 
+                xml: str):
         self.scale_mode: str = scale_mode
         self.start_letter: str = start_letter
         self.start_accidental: str = start_accidental
         self.xml: str = xml
-
+        self.scale_name = format_scale_name(start_letter, 
+            scale_mode, 
+            start_accidental)
 
 
 class ScaleGenerator:

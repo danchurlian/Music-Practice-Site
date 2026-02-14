@@ -39,19 +39,9 @@ def music_single_staff_xml(notes_xml: str) -> str:
     return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 
-# Given a letter, accidental, and scale mode, format the name such as "F# minor"
-def format_scale_name(letter: str, mode: str, accidental: str = None) -> str:
-    result: str = ""
-    if (accidental == "sharp"):
-        result = f"{letter}# {mode}"
-    elif (accidental == "flat"):
-        result = f"{letter}b {mode}"
-    else:
-        result = f"{letter} {mode}"
 
-    return result
 
-def format_chord_name(letter: str, accidental: str, chord_name: str):
+def format_chord_name(letter: str, accidental: str, chord_name: str) -> str:
     result: str = f"{letter}"
     if (accidental == "sharp"):
         result += "#"
@@ -59,9 +49,7 @@ def format_chord_name(letter: str, accidental: str, chord_name: str):
         result += "b"
     
     result += f" {chord_name}"
-
     return result
-
 
 
 def create_chord(chord_info: list[tuple]) -> str:
@@ -325,12 +313,8 @@ def scale_page():
 
     # generate random scale
     scale_info: ScaleInfo = ScaleGenerator.generate()
-    
-    real_answer: str = format_scale_name(
-        scale_info.start_letter,
-        scale_info.scale_mode,
-        scale_info.start_accidental)
 
+    real_answer: str = scale_info.scale_name 
     current_scale = real_answer
 
     # render the scale on the page
