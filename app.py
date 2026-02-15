@@ -4,6 +4,7 @@ import verovio
 import os
 import random
 
+from modules.NoteInfoHandler import NoteInfoHandler
 from modules.ScaleGenerator import ScaleGenerator, ScaleInfo
 from modules.ChordGenerator import ChordGenerator, ChordInfo
 from modules.KeySignatureGenerator import (KeySignatureGenerator,
@@ -46,56 +47,8 @@ def music_single_staff_xml(notes_xml: str) -> str:
     return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 
-# note_name can be "C#" or "Db" or "A"
-def get_note_code(note_name: str) -> int:
-    map: dict = {
-        "B#": 1,
-        "C": 1,
-        "C#": 2,
-        "Db": 2,
-        "D": 3,
-        "D#": 4,
-        "Eb": 4,
-        "E": 5,
-        "Fb": 5,
-        "E#": 6,
-        "F": 6,
-        "F#": 7,
-        "Gb": 7,
-        "G": 8,
-        "G#": 9,
-        "Ab": 9,
-        "A": 10,
-        "A#": 11,
-        "Bb": 11,
-        "B": 12,
-        "Cb": 12,
-    }
-    if (note_name not in map):
-        raise ValueError()
-    return map[note_name]
 
-# Used only to display the right answer in on the pitch audio page
-def get_note_name_from_code(code: int) -> str:
-    note_name_list: list = [
-        None,
-        "C or B#",
-        "C# or Db",
-        "D",
-        "D# or Eb",
-        "E or Fb",
-        "F or E#",
-        "F# or Gb",
-        "G",
-        "G# or Ab",
-        "A",
-        "A# or Bb",
-        "B or Cb",
-    ]
-    result: str = None
-    assert code > 0 and code < len(note_name_list), f"Invalid note code {code}"
-    result = note_name_list[code]
-    return result
+
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
@@ -152,14 +105,16 @@ def pitch_audio_page():
         correct: bool = True
         user_input: str = request.form.get("user_answer")
         try:
-            user_code: int = get_note_code(user_input)
+            user_code: int = NoteInfoHandler.get_note_code(user_input)
             correct = user_code == current_pitch_answer
             print(f"User input {user_input} | note code {user_code}")
         except ValueError:
             correct = False 
 
         feedback = "Correct!" if correct is True else "Wrong!"
-        feedback += f" That was a(n) {get_note_name_from_code(current_pitch_answer)}." if current_pitch_answer is not None else ""
+        feedback += (f" That was a(n) {NoteInfoHandler.get_note_name_from_code(current_pitch_answer)}." 
+            if current_pitch_answer is not None 
+            else "")
         
     reference_code: int = 1 # middle C
     random_code: int = random.randint(1, 12)

@@ -1,6 +1,60 @@
 import math
 
+NOTE_CODES: dict = {
+    "B#": 1,
+    "C": 1,
+    "C#": 2,
+    "Db": 2,
+    "D": 3,
+    "D#": 4,
+    "Eb": 4,
+    "E": 5,
+    "Fb": 5,
+    "E#": 6,
+    "F": 6,
+    "F#": 7,
+    "Gb": 7,
+    "G": 8,
+    "G#": 9,
+    "Ab": 9,
+    "A": 10,
+    "A#": 11,
+    "Bb": 11,
+    "B": 12,
+    "Cb": 12,
+}
+
 class NoteInfoHandler:
+    # note_name can be "C#" or "Db" or "A"
+    def get_note_code(note_name: str) -> int:
+        if (note_name not in NOTE_CODES):
+            raise ValueError()
+        return NOTE_CODES[note_name]
+
+    
+    # Used only to display the right answer in on the pitch audio page
+    def get_note_name_from_code(code: int) -> str:
+        note_name_list: list = [
+            None,
+            "C or B#",
+            "C# or Db",
+            "D",
+            "D# or Eb",
+            "E or Fb",
+            "F or E#",
+            "F# or Gb",
+            "G",
+            "G# or Ab",
+            "A",
+            "A# or Bb",
+            "B or Cb",
+        ]
+        result: str = None
+        assert code > 0 and code < len(note_name_list), f"Invalid note code {code}"
+        result = note_name_list[code]
+        return result
+
+
     # PRECONDITION: letter1 > letter2
     # PRECONDITION: only works for letters next to each other
     def get_half_step_adjacent_notes(letter1: str, letter2: str):
