@@ -6,8 +6,12 @@ import random
 
 from modules.ScaleGenerator import ScaleGenerator, ScaleInfo
 from modules.ChordGenerator import ChordGenerator, ChordInfo
-
+from modules.KeySignatureGenerator import (KeySignatureGenerator,
+                                            KeySignatureInfo)
+# Config Flask
 app = Flask(__name__)
+
+# Config Verovio library
 tk = verovio.toolkit()
 tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
 tk.setOptions({
@@ -21,6 +25,8 @@ tk.setOptions({
     "pageMarginBottom": 0,
 })
 
+
+# Setup Jinja environment
 jinja_env: Environment = Environment(
     loader=PackageLoader("app")
 )
@@ -87,41 +93,9 @@ def get_note_name_from_code(code: int) -> str:
         "B or Cb",
     ]
     result: str = None
-    assert (code > 0 and code < len(note_name_list), f"Invalid note code {code}")
+    assert code > 0 and code < len(note_name_list), f"Invalid note code {code}"
     result = note_name_list[code]
     return result
-
-
-def get_key_signature_xml(fifths_number: int) -> str:
-    template: Template = jinja_env.get_template("single_staff_template.xml") 
-    return template.render(attributes=f"""
-<divisions>1</divisions>
-<key>
-    <fifths>{fifths_number}</fifths>
-</key>
-    """)
-
-
-def get_key_signature_info(fifths_number: int) -> list:
-    map: dict = {
-        -7: ["Cb", "Ab"],
-        -6: ["Gb", "Eb"],
-        -5: ["Db", "Bb"],
-        -4: ["Ab", "F"],
-        -3: ["Eb", "C"],
-        -2: ["Bb", "G"],
-        -1: ["F", "D"],
-        0: ["C", "A"],
-        1: ["G", "E"],
-        2: ["D", "B"],
-        3: ["A", "F#"],
-        4: ["E", "C#"],
-        5: ["B", "G#"],
-        6: ["F#", "D#"],
-        7: ["C#", "A#"],
-    }
-    assert fifths_number in map, f"Invalid fifths_number {fifths_number}"
-    return map[fifths_number]
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
@@ -132,7 +106,7 @@ def key_signature_page():
     global current_major_key_answer, current_minor_key_answer
     feedback_content: str = "Enter something!"
 
-    # If the user responded, get the user's input.
+    # If the user responded, evaluate the user's input.
     if request.method == "POST":
         user_major_input: str = request.form.get("major_key_name").strip()
         user_minor_input: str = request.form.get("minor_key_name").strip()
@@ -149,24 +123,21 @@ def key_signature_page():
         current_major_key_answer = ""
         current_minor_key_answer = ""
 
-
-    # Generate a random fifths number
-    fifths_number: int = random.randint(-7, 7)
-    accidental_using: str = "sharp" if fifths_number >= 0 else "flat"
-
-    # Get ansewrs based on the fifths number
-    key_sig_info = get_key_signature_info(fifths_number)
-    major_key_answer: str = f"{key_sig_info[0]} major" 
-    minor_key_answer: str = f"{key_sig_info[1]} minor"
-    current_major_key_answer = major_key_answer
-    current_minor_key_answer = minor_key_answer
-
-    # Logging
-    print(f"{abs(fifths_number)} {accidental_using}s")
-    print(f"{current_major_key_answer} | {current_minor_key_answer}")
+    # Generate a KeySignatureInfo
+    key_signature_info: KeySignatureInfo = KeySignatureGenerator.generate()
+    current_major_key_answer = key_signature_info.major_name 
+    current_minor_key_answer = key_signature_info.minor_name
+    fifths_number: int = key_signature_info.fifths_number
 
     # Render the key signature as an svg and render the html page 
-    xml: str = get_key_signature_xml(fifths_number)
+    template: Template = jinja_env.get_template("single_staff_template.xml") 
+    xml: str = template.render(attributes=f"""
+<divisions>1</divisions>
+<key>
+    <fifths>{fifths_number}</fifths>
+</key>
+    """)
+
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
     return render_template("key_signature_page.html", feedback=feedback_content, music_svg=music_svg)
