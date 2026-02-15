@@ -2,6 +2,9 @@ from .NoteBuilder import NoteBuilder
 from .NoteInfoHandler import NoteInfoHandler
 import random
 
+
+# Keys are the scale modes. Each value is a list of intervals 
+# from previous note to current note.
 SCALE_MAP: dict = {
     "major": [2, 2, 1, 2, 2, 2, 1],
     "minor": [2, 1, 2, 2, 2, 2, 1],
@@ -64,32 +67,7 @@ def get_random_scale_info() -> tuple:
         return (random_scale_letter, random_mode, random_accidental)
 
 
-class ScaleInfo(object):
-    def __init__(self, start_letter: str,
-                scale_mode: str, 
-                start_accidental: str, 
-                xml: str):
-        self.scale_mode: str = scale_mode
-        self.start_letter: str = start_letter
-        self.start_accidental: str = start_accidental
-        self.xml: str = xml
-        self.scale_name = format_scale_name(start_letter, 
-            scale_mode, 
-            start_accidental)
-
-
-class ScaleGenerator:
-    def generate() -> ScaleInfo:
-        (start_letter, scale_mode, start_accidental) = get_random_scale_info()
-        return ScaleInfo(
-            start_letter=start_letter, 
-            scale_mode=scale_mode, 
-            start_accidental=start_accidental, 
-            xml=ScaleGenerator._get_xml(
-                start_letter, scale_mode, start_accidental))
-
-
-    def _get_xml(letter: str, scale_mode: str, accidental: str = None) -> str:
+def get_xml(letter: str, scale_mode: str, accidental: str = None) -> str:
         assert scale_mode in SCALE_MAP, f"Invalid scale_mode {scale_mode}"
         
         SCALE_STEPS: list = SCALE_MAP[scale_mode]
@@ -149,4 +127,30 @@ class ScaleGenerator:
             note_xml: str = note.get_xml()
             result += note_xml
 
-        return result 
+        return result
+
+class ScaleInfo(object):
+    def __init__(self, start_letter: str,
+                scale_mode: str, 
+                start_accidental: str, 
+                xml: str):
+        self.scale_mode: str = scale_mode
+        self.start_letter: str = start_letter
+        self.start_accidental: str = start_accidental
+        self.xml: str = xml
+        self.scale_name = format_scale_name(start_letter, 
+            scale_mode, 
+            start_accidental)
+
+
+class ScaleGenerator:
+    def generate() -> ScaleInfo:
+        (start_letter, scale_mode, start_accidental) = get_random_scale_info()
+        return ScaleInfo(
+            start_letter=start_letter, 
+            scale_mode=scale_mode, 
+            start_accidental=start_accidental, 
+            xml=get_xml(
+                start_letter, scale_mode, start_accidental
+            )
+        )
