@@ -4,9 +4,8 @@ import verovio
 import os
 import random
 
-from modules.NoteBuilder import NoteBuilder
-from modules.NoteInfoHandler import NoteInfoHandler
 from modules.ScaleGenerator import ScaleGenerator, ScaleInfo
+from modules.ChordGenerator import ChordGenerator, ChordInfo
 
 app = Flask(__name__)
 tk = verovio.toolkit()
@@ -26,6 +25,8 @@ jinja_env: Environment = Environment(
     loader=PackageLoader("app")
 )
 
+
+# Global variables for evaluating answers
 current_scale: str = ""
 current_chord_answer: str = ""
 current_pitch_answer: int = None
@@ -38,39 +39,6 @@ def music_single_staff_xml(notes_xml: str) -> str:
     template: Template = jinja_env.get_template("single_staff_template.xml")
     return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
-
-
-
-def format_chord_name(letter: str, accidental: str, chord_name: str) -> str:
-    result: str = f"{letter}"
-    if (accidental == "sharp"):
-        result += "#"
-    elif (accidental == "flat"):
-        result += "b"
-    
-    result += f" {chord_name}"
-    return result
-
-
-def create_chord(chord_info: list[tuple]) -> str:
-    result_xml: str = ""
-    for i, info in enumerate(chord_info):
-        # Unpack from the info tuple
-        (step, octave, *rest) = info
-        accidental: str = rest[0] if len(rest) > 0 else None
-            
-        should_add_chord_tag: bool = (i > 0)
-        new_note = NoteBuilder() \
-            .set_step(step) \
-            .set_octave(octave) \
-            .set_note_type("whole") \
-            .set_accidental(accidental) \
-            .set_is_chord(should_add_chord_tag) \
-            .build()
-
-        result_xml += new_note.get_xml()
-
-    return result_xml
 
 # note_name can be "C#" or "Db" or "A"
 def get_note_code(note_name: str) -> int:
@@ -156,9 +124,6 @@ def get_key_signature_info(fifths_number: int) -> list:
     return map[fifths_number]
 
 
-
-
-
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
 
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
@@ -242,51 +207,17 @@ def chord_page():
     if (request.method == "POST"):
         user_answer: str = request.form.get("chord_answer")
         if (current_chord_answer != ""):
-            feedback = "Correct!" if user_answer == current_chord_answer else "Wrong!"
+            feedback = ("Correct!" if user_answer == current_chord_answer 
+                        else "Wrong!")
             feedback += f" The correct answer was \"{current_chord_answer}\"."
 
-    possible_chords: dict = {
-        ("C", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
-        ("C", "sharp"): ["major", "major 7th", "dominant 7th", "minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("D", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
-        ("D", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("E", "flat"): ["major", "major 7th", "dominant 7th", "minor", "augmented", "diminished"],
-        ("E", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
-        ("F", "flat"): ["augmented"],
-        ("G", "flat"): ["major", "major 7th", "dominant 7th", "augmented"],
-        ("G", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("A", "flat"): ["major", "major 7th", "dominant 7th", "minor", "minor 7th",  "augmented"],
-        ("A", "sharp"): ["minor", "minor 7th", "diminished", "diminished 7th", "half-diminished 7th"],
-        ("B", "sharp"): ["diminished", "diminished 7th", "half-diminished 7th"],
-    }
-
-    interval_map: dict = {
-        "major": [4, 3],
-        "minor": [3, 4],
-        "augmented": [4, 4],
-        "diminished": [3, 3],
-        "diminished 7th": [3, 3, 3],
-        "half-diminished 7th": [3, 3, 4],
-        "major 7th": [4, 3, 4],
-        "dominant 7th": [4, 3, 3],
-        "minor 7th": [3, 4, 3],
-    }
-    random_letter: str = chr(64 + random.randint(1, 7))
-    random_accidental: int = random.choice(["flat", "sharp", None])
-    key = (random_letter, random_accidental)
-    
-    # Get a random chord and generate the intervals
-    possible_chord_list: list = list(interval_map.keys()) if (key not in possible_chords) else possible_chords[key]
-    random_chord_name: str = random.choice(possible_chord_list)
-
-    random_interval_list: list = interval_map[random_chord_name]
-    answer: str = format_chord_name(*key, random_chord_name)
+    # Generate a chord and access its metadata
+    chord_info: ChordInfo = ChordGenerator.generate()
+    answer: str = chord_info.chord_name
     current_chord_answer = answer
 
     # Generate the notes and render
-    chord_info_list = NoteInfoHandler.get_note_info_by_intervals(*key, random_interval_list)
-    notes_xml: str = create_chord(chord_info_list)
-
+    notes_xml: str = chord_info.xml
     xml: str = music_single_staff_xml(notes_xml)
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
@@ -304,8 +235,7 @@ def scale_page():
     # evaluate user input
     answer_result: str = "Enter something..."
     if request.method == "POST":
-        user_input: str = request.form.get('user_input')
-
+        user_input: str = request.form.get("user_input")
         if (user_input == current_scale):
             answer_result = f"You're right! That was \"{current_scale}\"."
         else:
