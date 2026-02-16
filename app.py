@@ -47,11 +47,14 @@ def music_single_staff_xml(notes_xml: str) -> str:
     return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 
-
-
-
-
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
+@app.route("/pitch-intervals")
+def pitch_interval_page():
+    note_code_1: int = random.randint(1, 13)
+    note_code_2: int = random.randint(1, 13)
+    return render_template("pitch_interval_page.html",
+                           note_1=note_code_1, note_2=note_code_2)
+
 
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature", methods=["GET", "POST"])
