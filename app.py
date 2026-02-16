@@ -48,8 +48,11 @@ def music_single_staff_xml(notes_xml: str) -> str:
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
-@app.route("/pitch-intervals")
+@app.route("/pitch-intervals", methods=["GET", "POST"])
 def pitch_interval_page():
+    if (request.method == "POST"):
+        user_input: str = request.form["user-response"]
+        print(user_input)
     note_code_1: int = random.randint(1, 13)
     note_code_2: int = random.randint(1, 13)
     return render_template("pitch_interval_page.html",

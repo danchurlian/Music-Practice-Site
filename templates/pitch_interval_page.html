@@ -3,6 +3,13 @@
 {% block main %}
 <section class="main_content">
     <button id="interval_button">Listen</button>
+    <form method="post">
+        <label for="user-response">
+            What is the interval between the notes?
+        </label>
+        <input name="user-response" autocomplete="off" autofocus="true" required="true"></input>
+        <button type="submit">Submit</button>
+    </form>
 </section>
 <script>
     // Play plays the appropriate note mp3 file given the noteNumber. 
