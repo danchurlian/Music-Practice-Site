@@ -9,6 +9,8 @@ from modules.ScaleGenerator import ScaleGenerator, ScaleInfo
 from modules.ChordGenerator import ChordGenerator, ChordInfo
 from modules.KeySignatureGenerator import (KeySignatureGenerator,
                                             KeySignatureInfo)
+from modules.PitchIntervalGenerator import (PitchIntervalGenerator,
+                                             PitchIntervalInfo)
 # Config Flask
 app = Flask(__name__)
 
@@ -39,7 +41,7 @@ current_chord_answer: str = ""
 current_pitch_answer: int = None
 current_major_key_answer: str = ""
 current_minor_key_answer: str = ""
-
+current_pitch_interval_answer: str = "'"
 
 # called by chord_page() and scale_page()
 def music_single_staff_xml(notes_xml: str) -> str:
@@ -50,13 +52,21 @@ def music_single_staff_xml(notes_xml: str) -> str:
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
 @app.route("/pitch-intervals", methods=["GET", "POST"])
 def pitch_interval_page():
+    global current_pitch_interval_answer
+    feedback: str = "You will hear two notes. Identify the interval between them."
+
     if (request.method == "POST"):
+        # Add answer feedback feedback 
         user_input: str = request.form["user-response"]
         print(user_input)
-    note_code_1: int = random.randint(1, 13)
-    note_code_2: int = random.randint(1, 13)
+        feedback = ("Correct! " if user_input == current_pitch_interval_answer else "Wrong! ") 
+        feedback += f"The previous interval was '{current_pitch_interval_answer}'."
+
+    info: PitchIntervalInfo = PitchIntervalGenerator.generate()
+    current_pitch_interval_answer = info.answer
     return render_template("pitch_interval_page.html",
-                           note_1=note_code_1, note_2=note_code_2)
+                           note_1=info.note_num_1, note_2=info.note_num_2,
+                           feedback=feedback)
 
 
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
