@@ -5,6 +5,7 @@
         <form method="post">
             <label for="chord_answer">What is the name of this chord?</label>
             <input name="chord_answer" autocomplete="off" autofocus="true" />
+            <button type="submit">Submit</button>
         </form>
         <div>{{ feedback }}</div>
         <table>
@@ -18,7 +19,6 @@
             <tr><td>C major 7th</td></tr>
             <tr><td>C dominant 7th</td></tr>
             <tr><td>C minor 7th</td></tr>
-
         </table>
         <section style="width:40%">
             {{ music_svg | safe }}
