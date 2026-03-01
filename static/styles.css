@@ -127,8 +127,9 @@ form button:hover {
 }
 #interval_choice_grid {
     display: grid;
+    grid-auto-flow: column;
     min-width: 40%;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     border: .125rem solid rgb(129, 129, 129)
 }
 #interval_choice_grid div {
