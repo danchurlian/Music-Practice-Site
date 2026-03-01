@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<section class="main_content" id="pitch_interval_main">
+    <h1>Pitch Interval Practice</h1>
+    <div>{{ feedback }}</div>
+    <button class="listen_button" id="interval_button">Listen</button>
+    <form method="post">
+        <label for="user-response">
+            What is the interval between the notes?
+        </label>
+        <input name="user-response" autocomplete="off" autofocus="true" required="true"></input>
+        <button type="submit">Submit</button>
+    </form>
+    <h2 id="pitch_interval_example_h2">Answer examples: </h2>
+    <div id="interval_choice_grid">
+        <div>perfect unison</div>
+        <div>minor 2nd</div>
+        <div>major 2nd</div>
+        <div>minor 3rd</div>
+        <div>major 3rd</div>
+        <div>perfect 4th</div>
+        <div>tritone</div>
+        <div>perfect 5th</div>
+        <div>minor 6th</div>
+        <div>major 6th</div>
+        <div>minor 7th</div>
+        <div>major 7th</div>
+        <div>perfect octave</div>
+    </div>
+</section>
+<script>
+    // Play plays the appropriate note mp3 file given the noteNumber. 
+    const playAudio = (noteNumber) => {
+        // Fetch for the mp3 audio file from the backend
+        const fileName = `note${noteNumber}.mp3`;
+        const url = "{{ url_for('static', filename='')}}" + fileName;
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create an audio instance and play it
+                const url = URL.createObjectURL(blob);
+                const audio = new Audio(url);
+                audio.controls = false;
+                document.body.appendChild(audio);
+                audio.play();
+
+                // Destroy the audio element when it is finished playing
+                audio.addEventListener("ended", event => {
+                    event.target.remove();
+                });
+            })
+            .catch(() => { console.log("Something happened."); });
+    };
+
+    const LISTEN_COOLDOWN_MS = 1500;
+    let playingSound = false;
+    const noteNum1 = Number("{{ note_1 }}");
+    const noteNum2 = Number("{{ note_2 }}");
+
+    const button = document.getElementById("interval_button");
+    button.addEventListener("mouseup", event => {
+        if (!playingSound) {
+            playingSound = true;
+            console.log(`Playing ${noteNum1} and ${noteNum2}`);
+            playAudio(noteNum1);
+            playAudio(noteNum2);
+
+            // Disable debounce after waiting for 1.5 seconds
+            setTimeout(() => {playingSound = false}, LISTEN_COOLDOWN_MS);
+        }
+    });
+</script>
+{% endblock %}
