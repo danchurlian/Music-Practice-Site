@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<section class="main_content">
+<section class="main_content" id="pitch_interval_main">
+    <h1>Pitch Interval Practice</h1>
     <div>{{ feedback }}</div>
-    <button id="interval_button">Listen</button>
+    <button class="listen_button" id="interval_button">Listen</button>
     <form method="post">
         <label for="user-response">
             What is the interval between the notes?
@@ -11,6 +12,22 @@
         <input name="user-response" autocomplete="off" autofocus="true" required="true"></input>
         <button type="submit">Submit</button>
     </form>
+    <h2 id="pitch_interval_example_h2">Answer examples: </h2>
+    <div id="interval_choice_grid">
+        <div>perfect unison</div>
+        <div>minor 2nd</div>
+        <div>major 2nd</div>
+        <div>minor 3rd</div>
+        <div>major 3rd</div>
+        <div>perfect 4th</div>
+        <div>tritone</div>
+        <div>perfect 5th</div>
+        <div>minor 6th</div>
+        <div>major 6th</div>
+        <div>minor 7th</div>
+        <div>major 7th</div>
+        <div>perfect octave</div>
+    </div>
 </section>
 <script>
     // Play plays the appropriate note mp3 file given the noteNumber. 
@@ -25,7 +42,7 @@
                 const url = URL.createObjectURL(blob);
                 const audio = new Audio(url);
                 audio.controls = false;
-                document.body.appendChild(audio)
+                document.body.appendChild(audio);
                 audio.play();
 
                 // Destroy the audio element when it is finished playing

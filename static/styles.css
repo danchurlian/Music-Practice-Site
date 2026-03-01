@@ -1,3 +1,9 @@
+:root {
+    --main-text-color: rgb(60, 60, 60);
+    --cell-dark: rgb(238, 238, 238);
+    --cell-light: rgb(255, 255, 242);
+}
+
 body {
     min-height: 110vh;
     margin: 0px;
@@ -30,8 +36,6 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    /* align-self: end; */
 }
 footer div {
     color: white;
@@ -43,7 +47,7 @@ main {
     min-height: 100vh;
     font-size: 1.1rem;
     flex-grow: 1;
-    color: rgb(48, 48, 48);
+    color: var(--main-text-color);
 }
 
 .main_content {
@@ -53,24 +57,21 @@ main {
 }
 
 
-#scale_main div, form {
-    padding: .5rem 0;
-}
-
 table {
     margin-top: 1rem;
 }
 tr:nth-child(even) {
-    background-color: rgb(255, 255, 242);
+    background-color: var(--cell-light);
 }
 tr:nth-child(odd) {
-    background-color:rgb(238, 238, 238);
+    background-color: var(--cell-dark);
 }
 
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0;
 }
 
 form input {
@@ -78,18 +79,68 @@ form input {
 }
 
 form button {
-    min-height: 2.5rem;
-    min-width: 5rem;
+    min-width: 8rem;
+    min-height: 4rem;
     flex-grow: 2.5;
 
     padding: 0;
     background-color: brown; 
     color: white;
     font-family: Roboto, sans-serif;
-    font-size: 1rem;
+    font-size: 180%;
     border: 0;
 }
 
 form button:hover {
     background-color: darkred;
+}
+
+.listen_button {
+    min-width: 8rem;
+    min-height: 4rem;
+
+    background-color: gold;
+    font-family: Roboto, sans-serif;
+    font-weight: bold;
+    font-size: 200%;
+    color: var(--main-text-color);
+    border: 0;
+}
+.listen_button:hover {
+    background-color: rgb(175, 149, 0);
+}
+#interval_button {
+    margin: 0.5rem 0;
+}
+
+/* Scale specific */
+#scale_main div, form {
+    padding: .5rem 0;
+}
+
+/* Page interval specific */
+#pitch_interval_main > div {
+    margin: .25rem 0;
+}
+#pitch_interval_example_h2 {
+    margin-bottom: 0.5rem;
+}
+#interval_choice_grid {
+    display: grid;
+    min-width: 40%;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: .125rem solid rgb(129, 129, 129)
+}
+#interval_choice_grid div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+}
+#interval_choice_grid div:nth-child(odd) {
+    background-color: var(--cell-dark);
+}
+
+#interval_choice_grid div:nth-child(even) {
+    background-color: var(--cell-light);
 }
