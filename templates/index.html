@@ -1,4 +1,32 @@
 {% extends "layout.html" %}
 {% block main %}
-    <h1>Music practice!</h1>
+<section class="main_content">
+    <h1>Music Practice!</h1>
+    <section id="home-grid">
+        <a href="/scales">
+            <div>
+                <img src="{{ url_for('static', filename='scale_page_icon.png') }}"/>
+            </div>
+            <menu-link-title>Scales</menu-link-title>
+        </a>
+        <a href="/chords">
+            <div>
+                <img src="{{ url_for('static', filename='chord_page_icon.png') }}"/>
+            </div>
+            <menu-link-title>Chords</menu-link-title>
+        </a>
+        <a href="/key-signature">
+            <img src="{{ url_for('static', filename='key_signature_page_icon.png') }}"/>
+            <menu-link-title>Key Signatures</menu-link-title>
+        </a>
+        <a href="/pitch-audio">
+            <img src="{{ url_for('static', filename='pitch_audio_page_icon.png') }}"/>
+            <menu-link-title>Pitches</menu-link-title>
+        </a>
+        <a href="/pitch-intervals">
+            <img src="{{ url_for('static', filename='pitch_interval_page_icon.png') }}"/>
+            <menu-link-title>Pitch Intervals</menu-link-title>
+        </a>
+    </section>
+</section>
 {% endblock %}
