@@ -11,8 +11,42 @@
         <input name="minor_key_name" autofocus="true" required="true" autocomplete="off"></input>
         <button type="submit">Submit</button>
     </form>
-    <section style="width:30vw">
+    <section style="width:20vw; max-height:140px">
         {{ music_svg | safe }}
     </section>
+
+    <h2 class="answer-choice-heading">Example Answers:</h2>
+    <answer-choice-grid id="key-sig-choice-grid">
+        <div>C major</div>
+        <div>G major</div>
+        <div>D major</div>
+        <div>E major</div>
+        <div>B major</div>
+        <div>F# major</div>
+        <div>C# major</div>
+        <div>F major</div>
+        <div>Bb major</div>
+        <div>Eb major</div>
+        <div>Ab major</div>
+        <div>Db major</div>
+        <div>Gb major</div>
+        <div>Cb major</div>
+        <div>A minor</div>
+        <div>E minor</div>
+        <div>G minor</div>
+        <div>B minor</div>
+        <div>F# minor</div>
+        <div>C# minor</div>
+        <div>G# minor</div>
+        <div>D# minor</div>
+        <div>A# minor</div>
+        <div>D minor</div>
+        <div>G minor</div>
+        <div>C minor</div>
+        <div>F minor</div>
+        <div>Bb minor</div>
+        <div>Eb minor</div>
+        <div>Ab minor</div>
+    </answer-choice-grid>
 </section>
 {% endblock %}

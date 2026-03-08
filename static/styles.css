@@ -205,6 +205,10 @@ answer-choice-grid {
 #interval-choice-grid {
     grid-template-columns: repeat(3, 1fr);
 }
+#key-choice-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+}
 answer-choice-grid div {
     display: flex;
     align-items: center;
