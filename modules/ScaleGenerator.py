@@ -7,9 +7,9 @@ import random
 # from previous note to current note.
 SCALE_MAP: dict = {
     "major": [2, 2, 1, 2, 2, 2, 1],
-    "minor": [2, 1, 2, 2, 2, 2, 1],
     "harmonic minor": [2, 1, 2, 2, 1, 3, 1],
     "natural minor": [2, 1, 2, 2, 1, 2, 2],
+    "melodic minor": [2, 1, 2, 2, 2, 2, 1],
     "dorian": [2, 1, 2, 2, 2, 1, 2],
     "phrygian": [1, 2, 2, 2, 1, 2, 2],
     "lydian": [2, 2, 2, 1, 2, 2, 1], 
@@ -60,7 +60,7 @@ def get_random_scale_info() -> tuple:
 
         # add other minor modes if possible
         if mode_list[-1] == "minor":
-            mode_list.extend(["harmonic minor", "natural minor"])
+            mode_list = ["natural minor", "harmonic minor", "melodic minor"]
 
         random_mode: str = random.choice(mode_list)
 
