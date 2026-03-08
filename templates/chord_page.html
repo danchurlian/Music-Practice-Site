@@ -8,20 +8,22 @@
             <button type="submit">Submit</button>
         </form>
         <div>{{ feedback }}</div>
-        <table>
-            <tr><th>Examples</th></tr>
-            <tr><td>C major</td></tr>
-            <tr><td>Bb minor</td></tr>
-            <tr><td>C augmented</td></tr>
-            <tr><td>A# diminished</td></tr>
-            <tr><td>A# diminished 7th</td></tr>
-            <tr><td>B half-diminished 7th</td></tr>
-            <tr><td>C major 7th</td></tr>
-            <tr><td>C dominant 7th</td></tr>
-            <tr><td>C minor 7th</td></tr>
-        </table>
-        <section style="width:40%">
+
+        <section style="width:30%">
             {{ music_svg | safe }}
         </section>
+
+        <h2 class="answer-choice-heading">Example Answers: </h2>
+        <answer-choice-grid id="chord-choice-grid">
+            <div>C major</div>
+            <div>Bb minor</div>
+            <div>C augmented</div>
+            <div>A# diminished</div>
+            <div>A# diminished 7th</div>
+            <div>B half-diminished 7th</div>
+            <div>C major 7th</div>
+            <div>C dominant 7th</div>
+            <div>C minor 7th</div>
+        </answer-choice-grid>
     </section>
 {% endblock %}

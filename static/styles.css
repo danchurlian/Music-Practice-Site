@@ -179,26 +179,37 @@ form button:hover {
 #pitch_interval_main > div {
     margin: .25rem 0;
 }
-#pitch_interval_example_h2 {
+
+.answer-choice-heading {
     margin-bottom: 0.5rem;
 }
-#interval_choice_grid {
+
+answer-choice-grid {
+    min-width: 40%;
+    margin-bottom: 1rem;
+
     display: grid;
     grid-auto-flow: column;
-    min-width: 40%;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+
     border: .125rem solid rgb(129, 129, 129)
 }
-#interval_choice_grid div {
+#chord-choice-grid {
+    grid-template-columns: 1fr 1fr;
+}
+#interval-choice-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+answer-choice-grid div {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 2rem;
 }
-#interval_choice_grid div:nth-child(odd) {
+answer-choice-grid div:nth-child(odd) {
     background-color: var(--cell-dark);
 }
 
-#interval_choice_grid div:nth-child(even) {
+answer-choice-grid div:nth-child(even) {
     background-color: var(--cell-light);
 }
