@@ -4,7 +4,7 @@
         <h1>Scale Identification Practice</h1>
         <div>{{ answer_result }}</div>
 
-        <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div>
+        <!-- <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div> -->
         <form method="post">
             <label for="user_input">What is the scale below?</label>
             <input name="user_input" id="user_input" autofocus="true" autocomplete="off" required="true">
@@ -14,5 +14,18 @@
         <section style="width:50vw">
             {{ music_svg | safe }}
         </section>
+
+        <h2 class="answer-choice-heading">Example Answers: </h2>
+        <answer-choice-grid id="scale-choice-grid">
+            <div>C major</div>
+            <div>G# minor (for melodic minor)</div>
+            <div>D natural minor</div>
+            <div>Ab harmonic minor</div>
+            <div>Bb dorian</div>
+            <div>G phrygian</div>
+            <div>B lydian</div>
+            <div>C mixolydian</div>
+            <div>A# locrian</div>
+        </answer-choice-grid>
     </section>
 {% endblock %}

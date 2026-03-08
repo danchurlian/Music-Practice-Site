@@ -190,15 +190,20 @@ answer-choice-grid {
 
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(5, 1fr);
 
     border: .125rem solid rgb(129, 129, 129)
 }
+#scale-choice-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
 #chord-choice-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
 }
 #interval-choice-grid {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
 }
 answer-choice-grid div {
     display: flex;
