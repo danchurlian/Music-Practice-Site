@@ -2,7 +2,8 @@
     --main-text-color: rgb(60, 60, 60);
     --cell-dark: rgb(238, 238, 238);
     --cell-light: rgb(255, 255, 242);
-    --header-color: rgb(209, 52, 44)
+    --header-color: rgb(163, 27, 20);
+    --submit-color: rgb(209, 52, 44)
 }
 
 body {
@@ -76,20 +77,22 @@ form {
 }
 
 form input {
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 0.7rem 0;
 }
 
 form button {
     min-width: 8rem;
     min-height: 4rem;
+    padding: 0;
     flex-grow: 2.5;
 
-    padding: 0;
-    background-color: brown; 
+    background-color: var(--submit-color); 
     color: white;
     font-family: Roboto, sans-serif;
     font-size: 180%;
+
     border: 0;
+    border-radius: 8px;
 }
 
 form button:hover {
@@ -101,11 +104,13 @@ form button:hover {
     min-height: 4rem;
 
     background-color: gold;
+    color: var(--main-text-color);
     font-family: Roboto, sans-serif;
     font-weight: bold;
     font-size: 200%;
-    color: var(--main-text-color);
+
     border: 0;
+    border-radius: 8px;
 }
 .listen_button:hover {
     background-color: rgb(175, 149, 0);
