@@ -2,12 +2,13 @@
 {% block main %}
     <section class="main_content">
         <h1>Chord Identification Practice </h1>
+        <div>{{ feedback }}</div>
+
         <form method="post">
             <label for="chord_answer">What is the name of this chord?</label>
             <input name="chord_answer" autocomplete="off" autofocus="true" />
             <button type="submit">Submit</button>
         </form>
-        <div>{{ feedback }}</div>
 
         <section style="width:30%">
             {{ music_svg | safe }}
