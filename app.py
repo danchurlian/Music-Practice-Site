@@ -73,7 +73,7 @@ def pitch_interval_page():
 @app.route("/key-signature", methods=["GET", "POST"])
 def key_signature_page():
     global current_major_key_answer, current_minor_key_answer
-    feedback_content: str = "Enter something!"
+    feedback_content: str = ""
 
     # If the user responded, evaluate the user's input.
     if request.method == "POST":
@@ -145,7 +145,7 @@ def chord_page():
     global current_chord_answer
 
     # Handle user input
-    feedback: str = "Enter something in!"
+    feedback: str = ""
     if (request.method == "POST"):
         user_answer: str = request.form.get("chord_answer")
         if (current_chord_answer != ""):
@@ -175,13 +175,13 @@ def scale_page():
     global current_scale
 
     # evaluate user input
-    answer_result: str = "Enter something..."
+    answer_result: str = ""
     if request.method == "POST":
         user_input: str = request.form.get("user_input")
         if (user_input == current_scale):
-            answer_result = f"You're right! That was \"{current_scale}\"."
+            answer_result = f"Correct! That was \"{current_scale}\"."
         else:
-            answer_result = f"You're wrong! The previous scale answer was \"{current_scale}\"."
+            answer_result = f"Wrong! The previous scale answer was \"{current_scale}\"."
 
     # generate random scale
     scale_info: ScaleInfo = ScaleGenerator.generate()
