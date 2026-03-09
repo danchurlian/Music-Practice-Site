@@ -13,6 +13,9 @@ body {
     display: flex;
     flex-direction: column;
 }
+h1 {
+    margin: 1rem 0 0.5rem;
+}
 
 header {
     min-height: 8vh;
@@ -170,10 +173,6 @@ form button:hover {
     align-items: center;
 }
 
-/* Scale specific */
-#scale_main div, form {
-    padding: .5rem 0;
-}
 
 /* Page interval specific */
 #pitch_interval_main > div {
