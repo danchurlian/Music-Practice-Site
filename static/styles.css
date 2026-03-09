@@ -172,6 +172,9 @@ form button:hover {
     justify-content: center;
     align-items: center;
 }
+#home-grid menu-link-title:hover {
+    background-color: #9b2937;
+}
 
 
 /* Page interval specific */
