@@ -137,7 +137,12 @@ def pitch_audio_page():
     current_pitch_answer = random_code
     audio_file_name: str = f"note{random_code}.mp3"
     
-    return render_template("pitch_audio_page.html", reference_code=reference_code, random_code=random_code, feedback=feedback, audio_file_name=audio_file_name)
+    return render_template("pitch_audio_page.html",
+                            reference_code=reference_code, 
+                            random_code=random_code,
+                            feedback=feedback,
+                            audio_file_name=audio_file_name,
+                            )
 
 
 @app.route("/chords", methods=["GET", "POST"])

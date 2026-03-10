@@ -4,21 +4,33 @@
 <section class="main_content">
     <h1>Pitch Identification Practice</h1>
 
-    <!-- <div>{{ reference_code }}</div>
-    <div>{{ random_code }}</div> -->
     <div>{{ feedback }} </div>
-    <figure>
+    <figure class="pitch-audio-figure">
         <figcaption>Reference Note: C</figcaption>
-        <audio controls src="{{ url_for('static', filename='note1.mp3') }}"></audio>
+        <button class="listen_button" id="reference-button">Listen</button>
     </figure>
-    <figure>
+    <figure class="pitch-audio-figure">
         <figcaption>What is this pitch?</figcaption>
-        <audio controls src="{{ url_for('static', filename=audio_file_name)}}"></audio>
+        <button class="listen_button" id="random-pitch-button">Listen</button>
     </figure>
     <form method="POST">
         <label for="user_answer">Note name: </label>
         <input name="user_answer" autocomplete="off" autofocus="true" required="true" />
         <button type="submit">Submit</button>
     </form>
+    <script type="module">
+        const randomPitchCode = Number("{{ random_code }}")
+        
+        import {playAudio} from "../static/js/audio-handler.js"
+        let refButton = document.getElementById("reference-button");
+        let randomButton = document.getElementById("random-pitch-button");
+
+        refButton.addEventListener("mouseup", () => {
+            playAudio(1);
+        })
+        randomButton.addEventListener("mouseup", () => {
+            playAudio(randomPitchCode);
+        })
+    </script>
 </section>
 {% endblock %}
