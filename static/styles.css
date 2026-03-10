@@ -72,6 +72,13 @@ tr:nth-child(odd) {
     background-color: var(--cell-dark);
 }
 
+.pitch-audio-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 form {
     display: flex;
     flex-direction: column;
