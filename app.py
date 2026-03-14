@@ -77,8 +77,8 @@ def key_signature_page():
 
     # If the user responded, evaluate the user's input.
     if request.method == "POST":
-        user_major_input: str = request.form.get("major_key_name").strip()
-        user_minor_input: str = request.form.get("minor_key_name").strip()
+        user_major_input: str = request.form.get("major-key-name").strip()
+        user_minor_input: str = request.form.get("minor-key-name").strip()
         print(f"User entered {user_major_input} {user_minor_input}")
 
         # Check if the user's input matches the global variables at the top
@@ -119,7 +119,7 @@ def pitch_audio_page():
 
     if (request.method == "POST"):
         correct: bool = True
-        user_input: str = request.form.get("user_answer")
+        user_input: str = request.form.get("user-answer")
         try:
             user_code: int = NoteInfoHandler.get_note_code(user_input)
             correct = user_code == current_pitch_answer
@@ -152,7 +152,7 @@ def chord_page():
     # Handle user input
     feedback: str = ""
     if (request.method == "POST"):
-        user_answer: str = request.form.get("chord_answer")
+        user_answer: str = request.form.get("chord-answer")
         if (current_chord_answer != ""):
             feedback = ("Correct!" if user_answer == current_chord_answer 
                         else "Wrong!")
@@ -182,7 +182,7 @@ def scale_page():
     # evaluate user input
     answer_result: str = ""
     if request.method == "POST":
-        user_input: str = request.form.get("user_input")
+        user_input: str = request.form.get("user-input")
         if (user_input == current_scale):
             answer_result = f"Correct! That was \"{current_scale}\"."
         else:
