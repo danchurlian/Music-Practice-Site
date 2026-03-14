@@ -55,7 +55,7 @@ main {
     color: var(--main-text-color);
 }
 
-.main_content {
+.main-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -109,7 +109,7 @@ form button:hover {
     background-color: darkred;
 }
 
-.listen_button {
+.listen-button {
     min-width: 8rem;
     min-height: 4rem;
 
@@ -122,10 +122,10 @@ form button:hover {
     border: 0;
     border-radius: 8px;
 }
-.listen_button:hover {
+.listen-button:hover {
     background-color: rgb(175, 149, 0);
 }
-#interval_button {
+#interval-button {
     margin: 0.5rem 0;
 }
 
@@ -185,7 +185,7 @@ form button:hover {
 
 
 /* Page interval specific */
-#pitch_interval_main > div {
+#pitch-interval-main > div {
     margin: .25rem 0;
 }
 

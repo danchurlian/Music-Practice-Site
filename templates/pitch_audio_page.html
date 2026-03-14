@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<section class="main_content">
+<section class="main-content">
     <h1>Pitch Identification Practice</h1>
 
     <div>{{ feedback }} </div>
     <figure class="pitch-audio-figure">
         <figcaption>Reference Note: C</figcaption>
-        <button class="listen_button" id="reference-button">Listen</button>
+        <button class="listen-button" id="reference-button">Listen</button>
     </figure>
     <figure class="pitch-audio-figure">
         <figcaption>What is this pitch?</figcaption>
-        <button class="listen_button" id="random-pitch-button">Listen</button>
+        <button class="listen-button" id="random-pitch-button">Listen</button>
     </figure>
     <form method="POST">
         <label for="user_answer">Note name: </label>
