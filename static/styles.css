@@ -18,20 +18,25 @@ h1 {
 }
 
 header {
-    min-height: 8vh;
+    min-height: 2rem;
     background-color: var(--header-color);
 
     display: flex;
-    align-items: center;
 }
 header a {
+    min-height: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     color: white;
-    margin: 0 0.5rem;
+    padding: 0 0.5rem;
     font-size: 1.2rem;
     text-decoration: none;
 }
 header a:hover {
-    text-decoration: underline;
+    background-color: #bd1f32;
+    transition: background-color .15s;
 }
 
 footer {
@@ -107,6 +112,7 @@ form button {
 
 form button:hover {
     background-color: darkred;
+    transition: background-color .1s;
 }
 
 .listen-button {
