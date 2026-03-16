@@ -73,12 +73,12 @@ def pitch_interval_page():
 @app.route("/key-signature", methods=["GET", "POST"])
 def key_signature_page():
     global current_major_key_answer, current_minor_key_answer
-    feedback_content: str = "Enter something!"
+    feedback_content: str = ""
 
     # If the user responded, evaluate the user's input.
     if request.method == "POST":
-        user_major_input: str = request.form.get("major_key_name").strip()
-        user_minor_input: str = request.form.get("minor_key_name").strip()
+        user_major_input: str = request.form.get("major-key-name").strip()
+        user_minor_input: str = request.form.get("minor-key-name").strip()
         print(f"User entered {user_major_input} {user_minor_input}")
 
         # Check if the user's input matches the global variables at the top
@@ -119,7 +119,7 @@ def pitch_audio_page():
 
     if (request.method == "POST"):
         correct: bool = True
-        user_input: str = request.form.get("user_answer")
+        user_input: str = request.form.get("user-answer")
         try:
             user_code: int = NoteInfoHandler.get_note_code(user_input)
             correct = user_code == current_pitch_answer
@@ -137,7 +137,12 @@ def pitch_audio_page():
     current_pitch_answer = random_code
     audio_file_name: str = f"note{random_code}.mp3"
     
-    return render_template("pitch_audio_page.html", reference_code=reference_code, random_code=random_code, feedback=feedback, audio_file_name=audio_file_name)
+    return render_template("pitch_audio_page.html",
+                            reference_code=reference_code, 
+                            random_code=random_code,
+                            feedback=feedback,
+                            audio_file_name=audio_file_name,
+                            )
 
 
 @app.route("/chords", methods=["GET", "POST"])
@@ -145,9 +150,9 @@ def chord_page():
     global current_chord_answer
 
     # Handle user input
-    feedback: str = "Enter something in!"
+    feedback: str = ""
     if (request.method == "POST"):
-        user_answer: str = request.form.get("chord_answer")
+        user_answer: str = request.form.get("chord-answer")
         if (current_chord_answer != ""):
             feedback = ("Correct!" if user_answer == current_chord_answer 
                         else "Wrong!")
@@ -175,13 +180,13 @@ def scale_page():
     global current_scale
 
     # evaluate user input
-    answer_result: str = "Enter something..."
+    answer_result: str = ""
     if request.method == "POST":
-        user_input: str = request.form.get("user_input")
+        user_input: str = request.form.get("user-input")
         if (user_input == current_scale):
-            answer_result = f"You're right! That was \"{current_scale}\"."
+            answer_result = f"Correct! That was \"{current_scale}\"."
         else:
-            answer_result = f"You're wrong! The previous scale answer was \"{current_scale}\"."
+            answer_result = f"Wrong! The previous scale answer was \"{current_scale}\"."
 
     # generate random scale
     scale_info: ScaleInfo = ScaleGenerator.generate()
