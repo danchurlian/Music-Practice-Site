@@ -189,6 +189,15 @@ form button:hover {
     background-color: #9b2937;
 }
 
+/* About page specific things */
+#contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#contact-info h2 {
+    text-align: center;
+}
 
 /* Page interval specific */
 #pitch-interval-main > div {
