@@ -198,6 +198,19 @@ form button:hover {
 #contact-info h2 {
     text-align: center;
 }
+#contact-info ul {
+    min-width: 475px;
+}
+#contact-info li{
+    position: relative;
+}
+#contact-info li span {
+    font-weight: bold;
+}
+#contact-info li a {
+    position: absolute;
+    right: 0;
+}
 
 /* Page interval specific */
 #pitch-interval-main > div {
