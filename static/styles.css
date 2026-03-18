@@ -190,6 +190,11 @@ form button:hover {
 }
 
 /* About page specific things */
+#about-main-content p {
+    max-width: 50%;
+    text-align: justify;
+}
+
 #contact-info {
     display: flex;
     flex-direction: column;
