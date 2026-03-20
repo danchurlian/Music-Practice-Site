@@ -209,7 +209,8 @@ form button:hover {
     margin-bottom: 0;
 }
 #contact-info ul {
-    min-width: 475px;
+    min-width: 540px;
+    padding-right: 1.5rem;
 }
 #contact-info li{
     position: relative;
