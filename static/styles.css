@@ -18,13 +18,13 @@ h1 {
 }
 
 header {
-    min-height: 2rem;
+    min-height: 2.5rem;
     background-color: var(--header-color);
 
     display: flex;
 }
 header a {
-    min-height: 2rem;
+    min-height: 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
