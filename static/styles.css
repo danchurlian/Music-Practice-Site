@@ -7,7 +7,7 @@
 }
 
 body {
-    min-height: 110vh;
+    min-height: 90vh;
     margin: 0px;
     font-family: Roboto, sans-serif;
     display: flex;
@@ -18,13 +18,13 @@ h1 {
 }
 
 header {
-    min-height: 2.5rem;
+    min-height: 5vh;
     background-color: var(--header-color);
 
     display: flex;
 }
 header a {
-    min-height: 2.5rem;
+    min-height: 5vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,7 +41,7 @@ header a:hover {
 
 footer {
     background-color: brown;
-    min-height: 6vh;
+    min-height: 5vh;
 
     display: flex;
     flex-direction: column;
@@ -54,7 +54,7 @@ footer div {
 }
 
 main {
-    min-height: 100vh;
+    min-height: 90vh;
     font-size: 1.1rem;
     flex-grow: 1;
     color: var(--main-text-color);
