@@ -205,6 +205,9 @@ def scale_page():
         music_svg=music_svg, 
         answer_result=answer_result)
 
+@app.route("/about")
+def about_page():
+    return render_template("about.html")
 
 @app.route("/")
 def index():

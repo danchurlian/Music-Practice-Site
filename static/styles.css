@@ -7,7 +7,7 @@
 }
 
 body {
-    min-height: 110vh;
+    min-height: 90vh;
     margin: 0px;
     font-family: Roboto, sans-serif;
     display: flex;
@@ -18,25 +18,30 @@ h1 {
 }
 
 header {
-    min-height: 8vh;
+    min-height: 5vh;
     background-color: var(--header-color);
 
     display: flex;
-    align-items: center;
 }
 header a {
+    min-height: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     color: white;
-    margin: 0 0.5rem;
+    padding: 0 0.5rem;
     font-size: 1.2rem;
     text-decoration: none;
 }
 header a:hover {
-    text-decoration: underline;
+    background-color: #bd1f32;
+    transition: background-color .15s;
 }
 
 footer {
     background-color: brown;
-    min-height: 6vh;
+    min-height: 5vh;
 
     display: flex;
     flex-direction: column;
@@ -49,15 +54,19 @@ footer div {
 }
 
 main {
-    min-height: 100vh;
+    min-height: 90vh;
     font-size: 1.1rem;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
     color: var(--main-text-color);
 }
 
 .main-content {
+    position: relative;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     align-items: center;
 }
 
@@ -107,6 +116,7 @@ form button {
 
 form button:hover {
     background-color: darkred;
+    transition: background-color .1s;
 }
 
 .listen-button {
@@ -183,6 +193,47 @@ form button:hover {
     background-color: #9b2937;
 }
 
+/* About page specific things */
+#about-main-content p {
+    max-width: 50%;
+    text-align: justify;
+}
+
+#about-main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#contact-info {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: 2px solid rgb(196, 196, 196);
+    border-radius: 5px;
+}
+#contact-info h2 {
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+#contact-info ul {
+    min-width: 540px;
+    padding-right: 1.5rem;
+}
+#contact-info li{
+    position: relative;
+}
+#contact-info li span {
+    font-weight: bold;
+}
+#contact-info li a {
+    position: absolute;
+    right: 0;
+}
 
 /* Page interval specific */
 #pitch-interval-main > div {
