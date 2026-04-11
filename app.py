@@ -174,20 +174,28 @@ def chord_page():
         music_svg=music_svg, 
         feedback=feedback)
 
-# Generate a string that represents an HTML svg element,
+# Generate a tuple that has two components:
+# 1. a string name of the scale
+# 2. a string that represents the HTML svg,
 # containing a random scale and rendered by Verovio
-def new_scale_svg() -> str:
+def new_scale_name_svg() -> tuple:
     scale_info: ScaleInfo = ScaleGenerator.generate()
     # render the scale on the page
     notes_xml: str = scale_info.xml
     xml: str = music_single_staff_xml(notes_xml)
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
-    return music_svg 
+    return scale_info.scale_name, music_svg 
 
 @app.route("/scale-generate")
 def fetch_scale_svg() -> str:
-    return new_scale_svg() 
+    name, svg = new_scale_name_svg()
+    result: dict = {
+        "name": name,
+        "svg": svg,
+    }
+    # call jsonify automatically
+    return result
 
 @app.route("/scales", methods=["GET", "POST"])
 def scale_page():
