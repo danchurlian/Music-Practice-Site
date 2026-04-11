@@ -5,13 +5,13 @@
         <div>{{ answer_result }}</div>
 
         <!-- <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div> -->
-        <form method="post">
+        <form>
             <label for="user-input">What is the scale below?</label>
             <input name="user-input" id="user-input" autofocus="true" autocomplete="off" required="true">
-            <button type="submit">Submit</button>
+            <button id="scale-submit">Submit</button>
         </form>
         
-        <section style="width:40vw">
+        <section id="scale-svg-section" class="music-svg-section" style="width:40vw">
             {{ music_svg | safe }}
         </section>
 
@@ -28,4 +28,5 @@
             <div>A# locrian</div>
         </answer-choice-grid>
     </section>
+    <script src="{{ url_for('static', filename='/js/scale-page.js') }}"></script>
 {% endblock %}

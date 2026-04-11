@@ -174,6 +174,20 @@ def chord_page():
         music_svg=music_svg, 
         feedback=feedback)
 
+# Generate a string that represents an HTML svg element,
+# containing a random scale and rendered by Verovio
+def new_scale_svg() -> str:
+    scale_info: ScaleInfo = ScaleGenerator.generate()
+    # render the scale on the page
+    notes_xml: str = scale_info.xml
+    xml: str = music_single_staff_xml(notes_xml)
+    tk.loadData(xml)
+    music_svg: str = tk.renderToSVG(1)
+    return music_svg 
+
+@app.route("/scale-generate")
+def fetch_scale_svg() -> str:
+    return new_scale_svg() 
 
 @app.route("/scales", methods=["GET", "POST"])
 def scale_page():
