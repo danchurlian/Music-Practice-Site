@@ -222,10 +222,7 @@ def scale_page():
     tk.loadData(xml)
     music_svg: str = tk.renderToSVG(1)
 
-    return render_template(
-        "scale_page.html", 
-        music_svg=music_svg, 
-        answer_result=answer_result)
+    return render_template("scale_page.html")
 
 @app.route("/about")
 def about_page():
