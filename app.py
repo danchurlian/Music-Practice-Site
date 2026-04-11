@@ -197,31 +197,8 @@ def fetch_scale_svg() -> str:
     # call jsonify automatically
     return result
 
-@app.route("/scales", methods=["GET", "POST"])
+@app.route("/scales")
 def scale_page():
-    global current_scale
-
-    # evaluate user input
-    answer_result: str = ""
-    if request.method == "POST":
-        user_input: str = request.form.get("user-input")
-        if (user_input == current_scale):
-            answer_result = f"Correct! That was \"{current_scale}\"."
-        else:
-            answer_result = f"Wrong! The previous scale answer was \"{current_scale}\"."
-
-    # generate random scale
-    scale_info: ScaleInfo = ScaleGenerator.generate()
-
-    real_answer: str = scale_info.scale_name 
-    current_scale = real_answer
-
-    # render the scale on the page
-    notes_xml: str = scale_info.xml
-    xml: str = music_single_staff_xml(notes_xml)
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
-
     return render_template("scale_page.html")
 
 @app.route("/about")
