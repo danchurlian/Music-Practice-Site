@@ -2,13 +2,15 @@
 {% block main %}
     <section class="main-content">
         <h1>Scale Identification Practice</h1>
-        <div>{{ answer_result }}</div>
+        <div class="answer-result" id="scale-answer-result">
+            {{ answer_result }}
+        </div>
 
         <!-- <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div> -->
         <form>
             <label for="user-input">What is the scale below?</label>
             <input name="user-input" id="user-input" autofocus="true" autocomplete="off" required="true">
-            <button id="scale-submit">Submit</button>
+            <button id="scale-submit" type="submit">Submit</button>
         </form>
         
         <section id="scale-svg-section" class="music-svg-section" style="width:40vw">
