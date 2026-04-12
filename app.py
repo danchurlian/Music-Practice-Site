@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request
 from jinja2 import Environment, Template, PackageLoader
-import verovio
-import os
 import random
 
 from modules.NoteInfoHandler import NoteInfoHandler
@@ -13,21 +11,6 @@ from modules.PitchIntervalGenerator import (PitchIntervalGenerator,
                                              PitchIntervalInfo)
 # Config Flask
 app = Flask(__name__)
-
-# Config Verovio library
-tk = verovio.toolkit()
-tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
-tk.setOptions({
-    "inputFrom": "xml",
-    "svgViewBox": True,
-    "scale": 100,
-
-    "adjustPageHeight": True,
-    "adjustPageWidth": True,
-    "pageMarginTop": 0,
-    "pageMarginBottom": 0,
-})
-
 
 # Setup Jinja environment
 jinja_env: Environment = Environment(
@@ -110,34 +93,9 @@ def pitch_audio_page():
                             )
 
 
-@app.route("/chords", methods=["GET", "POST"])
+@app.route("/chords")
 def chord_page():
-    global current_chord_answer
-
-    # Handle user input
-    feedback: str = ""
-    if (request.method == "POST"):
-        user_answer: str = request.form.get("chord-answer")
-        if (current_chord_answer != ""):
-            feedback = ("Correct!" if user_answer == current_chord_answer 
-                        else "Wrong!")
-            feedback += f" The correct answer was \"{current_chord_answer}\"."
-
-    # Generate a chord and access its metadata
-    chord_info: ChordInfo = ChordGenerator.generate()
-    answer: str = chord_info.chord_name
-    current_chord_answer = answer
-
-    # Generate the notes and render
-    notes_xml: str = chord_info.xml
-    xml: str = music_single_staff_xml(notes_xml)
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
-
-    return render_template(
-        "chord_page.html", 
-        music_svg=music_svg, 
-        feedback=feedback)
+    return render_template("chord_page.html")
 
 
 @app.route("/chord-generate")
