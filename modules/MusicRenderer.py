@@ -24,17 +24,23 @@ tk.setOptions({
 type musicxml_str = str
 
 
-def render_single_staff_template(notes_xml: musicxml_str) -> str:
+def render_single_staff_template(additional_attributes_xml="", notes_xml="") -> str:
     """
     This function generates a MusicXML string using the single_staff_template
-    template. It inserts the notes_xml string into the template and returns
+    template.
+    The attributes for the resulting MusicXML have 1 division by default
+    and appends additiona_attributes_xml to the attributes section of the XML.
+
+    It inserts the notes_xml string into the template and returns
     the end result.
     """
 
+    attributes_xml: str = "<divisions>1</divisions>"
+
     template: Template = jinja_env.get_template("single_staff_template.xml")
     total_xml: musicxml_str = template.render(
-        attributes="<divisions>1</divisions>", 
-        notes=notes_xml)
+        attributes = attributes_xml + additional_attributes_xml, 
+        notes = notes_xml)
 
     return total_xml
 

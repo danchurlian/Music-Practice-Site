@@ -153,7 +153,9 @@ class ScaleGenerator:
         notes_xml: str = get_xml(
             start_letter, scale_mode, start_accidental
         )
-        xml: str = MusicRenderer.render_single_staff_template(notes_xml) 
+        xml: str = MusicRenderer.render_single_staff_template(
+            notes_xml=notes_xml
+        ) 
         svg: str = MusicRenderer.render_to_svg(xml)
 
         return ScaleInfo(
