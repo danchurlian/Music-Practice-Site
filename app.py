@@ -140,6 +140,12 @@ def chord_page():
         feedback=feedback)
 
 
+@app.route("/chord-generate")
+def chord_generate() -> str:
+    chord_info: ChordInfo = ChordGenerator.generate()
+    return chord_info.__dict__
+
+
 @app.route("/scale-generate")
 def fetch_scale_svg() -> str:
     scale_info: ScaleInfo = ScaleGenerator.generate()

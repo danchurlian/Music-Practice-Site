@@ -1,5 +1,7 @@
 from .NoteInfoHandler import NoteInfoHandler
 from .NoteBuilder import NoteBuilder
+from modules import MusicRenderer
+
 import random
 
 POSSIBLE_CHORDS_BY_ROOT: dict = {
@@ -84,10 +86,11 @@ def get_xml(note_info_list: list[tuple]) -> str:
 
 
 class ChordInfo:
-    def __init__(self, chord_name: str, xml: str):
+    def __init__(self, chord_name: str, xml: str, svg: str):
         self.intervals = None
         self.chord_name = chord_name
         self.xml = xml
+        self.svg = svg
 
 
 class ChordGenerator:
@@ -96,8 +99,12 @@ class ChordGenerator:
         start_note_data, chord_type, random_interval_list = get_random_info()
         chord_info_list = NoteInfoHandler.get_note_info_by_intervals(*start_note_data, random_interval_list)
         notes_xml: str = get_xml(chord_info_list)
+        total_xml: str = MusicRenderer.render_single_staff_template(
+            notes_xml=notes_xml)
+        svg: str = MusicRenderer.render_to_svg(total_xml)
 
         return ChordInfo(chord_name=format_chord_name(
             *start_note_data, chord_type), 
-            xml=notes_xml
+            xml=notes_xml,
+            svg=svg,
         )
