@@ -1,3 +1,4 @@
+from modules import MusicRenderer
 import random
 
 KEY_NAMES_BY_FIFTHS_NUMBER: dict = {
@@ -29,10 +30,14 @@ def get_key_signature_info(fifths_number: int) -> list:
 # This record class is used by the app module.
 # It contains data about the generated key.
 class KeySignatureInfo:
-    def __init__(self, fifths_number: str, major_name: str, minor_name: str):
+    def __init__(self, fifths_number: str, major_name: str, minor_name: str,
+                 xml: str, svg: str):
         self.fifths_number = fifths_number
         self.major_name = major_name
         self.minor_name = minor_name
+        self.xml = xml
+        self.svg = svg
+
 
 
 class KeySignatureGenerator:
@@ -45,8 +50,20 @@ class KeySignatureGenerator:
         major_minor_names: list = get_key_signature_info(fifths_number)
         major_key_answer: str = f"{major_minor_names[0]} major" 
         minor_key_answer: str = f"{major_minor_names[1]} minor"
+        total_xml: str = MusicRenderer.render_single_staff_template(
+            f"""
+<key>
+    <fifths>{fifths_number}</fifths>
+</key>
+
+"""
+        )
+        svg: str = MusicRenderer.render_to_svg(total_xml)
         
         return KeySignatureInfo(
             fifths_number=fifths_number,
             major_name=major_key_answer, 
-            minor_name=minor_key_answer)
+            minor_name=minor_key_answer,
+            xml=total_xml,
+            svg=svg,
+            )

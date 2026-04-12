@@ -111,6 +111,11 @@ def key_signature_page():
     music_svg: str = tk.renderToSVG(1)
     return render_template("key_signature_page.html", feedback=feedback_content, music_svg=music_svg)
 
+@app.route("/key-signature-generate")
+def key_signature_generate():
+    info: KeySignatureInfo = KeySignatureGenerator.generate()
+    return info.__dict__
+
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
