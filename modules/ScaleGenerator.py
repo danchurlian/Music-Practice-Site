@@ -1,5 +1,8 @@
 from .NoteBuilder import NoteBuilder
 from .NoteInfoHandler import NoteInfoHandler
+
+from modules import MusicRenderer
+
 import random
 
 
@@ -133,7 +136,7 @@ class ScaleInfo(object):
     def __init__(self, start_letter: str,
                 scale_mode: str, 
                 start_accidental: str, 
-                xml: str):
+                xml: str, svg: str):
         self.scale_mode: str = scale_mode
         self.start_letter: str = start_letter
         self.start_accidental: str = start_accidental
@@ -141,16 +144,22 @@ class ScaleInfo(object):
         self.scale_name = format_scale_name(start_letter, 
             scale_mode, 
             start_accidental)
+        self.svg = svg
 
 
 class ScaleGenerator:
     def generate() -> ScaleInfo:
         (start_letter, scale_mode, start_accidental) = get_random_scale_info()
+        notes_xml: str = get_xml(
+            start_letter, scale_mode, start_accidental
+        )
+        xml: str = MusicRenderer.render_single_staff_template(notes_xml) 
+        svg: str = MusicRenderer.render_to_svg(xml)
+
         return ScaleInfo(
             start_letter=start_letter, 
             scale_mode=scale_mode, 
             start_accidental=start_accidental, 
-            xml=get_xml(
-                start_letter, scale_mode, start_accidental
-            )
+            xml=xml,
+            svg=svg
         )

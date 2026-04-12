@@ -21,7 +21,7 @@ const loadNewScaleSvg = () => {
     fetch("/scale-generate")
         .then(result => result.json())
         .then(scaleInfoJson => {
-            currentScaleName = scaleInfoJson.name;
+            currentScaleName = scaleInfoJson.scale_name;
             console.log(`Answer ${currentScaleName}`);
 
             // Create a new element with the SVG inside
