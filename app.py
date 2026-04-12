@@ -36,11 +36,8 @@ jinja_env: Environment = Environment(
 
 
 # Global variables for evaluating answers
-current_scale: str = ""
 current_chord_answer: str = ""
 current_pitch_answer: int = None
-current_major_key_answer: str = ""
-current_minor_key_answer: str = ""
 current_pitch_interval_answer: str = "'"
 
 # called by chord_page() and scale_page()
@@ -70,46 +67,9 @@ def pitch_interval_page():
 
 
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
-@app.route("/key-signature", methods=["GET", "POST"])
+@app.route("/key-signature")
 def key_signature_page():
-    global current_major_key_answer, current_minor_key_answer
-    feedback_content: str = ""
-
-    # If the user responded, evaluate the user's input.
-    if request.method == "POST":
-        user_major_input: str = request.form.get("major-key-name").strip()
-        user_minor_input: str = request.form.get("minor-key-name").strip()
-        print(f"User entered {user_major_input} {user_minor_input}")
-
-        # Check if the user's input matches the global variables at the top
-        # Change the feedback content depending correct or not.
-        user_is_correct: bool = user_major_input == current_major_key_answer and user_minor_input == current_minor_key_answer
-        feedback_content = "Correct!" if user_is_correct is True else "Wrong!"
-        
-        feedback_content += f" That was {current_major_key_answer} and {current_minor_key_answer}."
-
-    else:
-        current_major_key_answer = ""
-        current_minor_key_answer = ""
-
-    # Generate a KeySignatureInfo
-    key_signature_info: KeySignatureInfo = KeySignatureGenerator.generate()
-    current_major_key_answer = key_signature_info.major_name 
-    current_minor_key_answer = key_signature_info.minor_name
-    fifths_number: int = key_signature_info.fifths_number
-
-    # Render the key signature as an svg and render the html page 
-    template: Template = jinja_env.get_template("single_staff_template.xml") 
-    xml: str = template.render(attributes=f"""
-<divisions>1</divisions>
-<key>
-    <fifths>{fifths_number}</fifths>
-</key>
-    """)
-
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
-    return render_template("key_signature_page.html", feedback=feedback_content, music_svg=music_svg)
+    return render_template("key_signature_page.html")
 
 @app.route("/key-signature-generate")
 def key_signature_generate():
