@@ -3,12 +3,12 @@
 {% block main %}
 <section class="main-content">
     <h1>Key Signature Identification Practice</h1>
-    <div>{{ feedback }}</div>
+    <div class="answer-result" id="keysig-answer-result">{{ feedback }}</div>
     <form>
         <label for="major-key-name">What is the major key below?</label>
-        <input name="major-key-name" autofocus="true" required="true" autocomplete="off"></input>
+        <input id="major-key-input" name="major-key-name" autofocus="true" required="true" autocomplete="off"></input>
         <label for="minor-key-name">What is the relative minor key below?</label>
-        <input name="minor-key-name" autofocus="true" required="true" autocomplete="off"></input>
+        <input id="minor-key-input" name="minor-key-name" autofocus="true" required="true" autocomplete="off"></input>
         <button id="keysig-submit" type="submit">Submit</button>
     </form>
     <section id="keysig-svg-section" class="music-svg-section" style="width:20vw; max-height:140px">
