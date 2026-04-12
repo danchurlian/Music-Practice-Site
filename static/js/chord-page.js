@@ -1,5 +1,6 @@
 const form = document.querySelector("form");
 const svgSection = document.getElementById("chord-svg-section");
+const chordInputField = document.getElementById("chord-input");
 
 const loadNewSvg = () => {
     fetch("/chord-generate")
@@ -10,13 +11,14 @@ const loadNewSvg = () => {
 
             svgSection.replaceChildren();
             svgSection.append(container);
-
+            
+            chordInputField.value = "";
+            chordInputField.focus();
         })
 }
 
 form.addEventListener("submit", (event) => {
     event.preventDefault();
-    console.log("submit");
 
     loadNewSvg();
 })
