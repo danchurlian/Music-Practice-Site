@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from jinja2 import Environment, Template, PackageLoader
 import random
 
 from modules.NoteInfoHandler import NoteInfoHandler
@@ -12,21 +11,11 @@ from modules.PitchIntervalGenerator import (PitchIntervalGenerator,
 # Config Flask
 app = Flask(__name__)
 
-# Setup Jinja environment
-jinja_env: Environment = Environment(
-    loader=PackageLoader("app")
-)
-
 
 # Global variables for evaluating answers
 current_chord_answer: str = ""
 current_pitch_answer: int = None
 current_pitch_interval_answer: str = "'"
-
-# called by chord_page() and scale_page()
-def music_single_staff_xml(notes_xml: str) -> str:
-    template: Template = jinja_env.get_template("single_staff_template.xml")
-    return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
@@ -49,15 +38,17 @@ def pitch_interval_page():
                            feedback=feedback)
 
 
+@app.route("/key-signature-generate")
+def key_signature_generate():
+    info: KeySignatureInfo = KeySignatureGenerator.generate()
+    return info.__dict__
+
+
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature")
 def key_signature_page():
     return render_template("key_signature_page.html")
 
-@app.route("/key-signature-generate")
-def key_signature_generate():
-    info: KeySignatureInfo = KeySignatureGenerator.generate()
-    return info.__dict__
 
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
@@ -92,22 +83,20 @@ def pitch_audio_page():
                             audio_file_name=audio_file_name,
                             )
 
-
-@app.route("/chords")
-def chord_page():
-    return render_template("chord_page.html")
-
-
 @app.route("/chord-generate")
 def chord_generate() -> str:
     chord_info: ChordInfo = ChordGenerator.generate()
     return chord_info.__dict__
 
 
+@app.route("/chords")
+def chord_page():
+    return render_template("chord_page.html")
+
+
 @app.route("/scale-generate")
 def fetch_scale_svg() -> str:
     scale_info: ScaleInfo = ScaleGenerator.generate()
-    scale_info.xml = music_single_staff_xml(scale_info.xml)
     return scale_info.__dict__
 
 
@@ -115,13 +104,16 @@ def fetch_scale_svg() -> str:
 def scale_page():
     return render_template("scale_page.html")
 
+
 @app.route("/about")
 def about_page():
     return render_template("about.html")
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run()
