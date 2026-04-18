@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 {% block main %}
-    <section class="main-content">
+    <section class="main-content" id="scale-page">
         <h1>Scale Identification Practice</h1>
         <div class="answer-result" id="scale-answer-result">
         </div>
 
         <!-- <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div> -->
         <form>
-            <label for="user-input">What is the scale below?</label>
-            <input name="user-input" id="user-input" autofocus="true" autocomplete="off" required="true">
+            <label for="scale-user-answer">What is the scale below?</label>
+            <input name="scale-user-answer" id="scale-user-answer"
+            autofocus="true" autocomplete="off" required="true">
             <button id="scale-submit" type="submit">Submit</button>
         </form>
         
@@ -28,5 +29,5 @@
             <div>A# locrian</div>
         </answer-choice-grid>
     </section>
-    <script src="{{ url_for('static', filename='/js/scale-page.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/single-staff-page.js') }}"></script>
 {% endblock %}
