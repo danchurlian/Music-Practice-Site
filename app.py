@@ -1,7 +1,4 @@
 from flask import Flask, render_template, request
-from jinja2 import Environment, Template, PackageLoader
-import verovio
-import os
 import random
 
 from modules.NoteInfoHandler import NoteInfoHandler
@@ -14,39 +11,11 @@ from modules.PitchIntervalGenerator import (PitchIntervalGenerator,
 # Config Flask
 app = Flask(__name__)
 
-# Config Verovio library
-tk = verovio.toolkit()
-tk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
-tk.setOptions({
-    "inputFrom": "xml",
-    "svgViewBox": True,
-    "scale": 100,
-
-    "adjustPageHeight": True,
-    "adjustPageWidth": True,
-    "pageMarginTop": 0,
-    "pageMarginBottom": 0,
-})
-
-
-# Setup Jinja environment
-jinja_env: Environment = Environment(
-    loader=PackageLoader("app")
-)
-
 
 # Global variables for evaluating answers
-current_scale: str = ""
 current_chord_answer: str = ""
 current_pitch_answer: int = None
-current_major_key_answer: str = ""
-current_minor_key_answer: str = ""
 current_pitch_interval_answer: str = "'"
-
-# called by chord_page() and scale_page()
-def music_single_staff_xml(notes_xml: str) -> str:
-    template: Template = jinja_env.get_template("single_staff_template.xml")
-    return template.render(attributes="<divisions>1</divisions>", notes=notes_xml)
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
@@ -69,47 +38,17 @@ def pitch_interval_page():
                            feedback=feedback)
 
 
+@app.route("/key-signature-generate")
+def key_signature_generate():
+    info: KeySignatureInfo = KeySignatureGenerator.generate()
+    return info.__dict__
+
+
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
-@app.route("/key-signature", methods=["GET", "POST"])
+@app.route("/key-signature")
 def key_signature_page():
-    global current_major_key_answer, current_minor_key_answer
-    feedback_content: str = ""
+    return render_template("key_signature_page.html")
 
-    # If the user responded, evaluate the user's input.
-    if request.method == "POST":
-        user_major_input: str = request.form.get("major-key-name").strip()
-        user_minor_input: str = request.form.get("minor-key-name").strip()
-        print(f"User entered {user_major_input} {user_minor_input}")
-
-        # Check if the user's input matches the global variables at the top
-        # Change the feedback content depending correct or not.
-        user_is_correct: bool = user_major_input == current_major_key_answer and user_minor_input == current_minor_key_answer
-        feedback_content = "Correct!" if user_is_correct is True else "Wrong!"
-        
-        feedback_content += f" That was {current_major_key_answer} and {current_minor_key_answer}."
-
-    else:
-        current_major_key_answer = ""
-        current_minor_key_answer = ""
-
-    # Generate a KeySignatureInfo
-    key_signature_info: KeySignatureInfo = KeySignatureGenerator.generate()
-    current_major_key_answer = key_signature_info.major_name 
-    current_minor_key_answer = key_signature_info.minor_name
-    fifths_number: int = key_signature_info.fifths_number
-
-    # Render the key signature as an svg and render the html page 
-    template: Template = jinja_env.get_template("single_staff_template.xml") 
-    xml: str = template.render(attributes=f"""
-<divisions>1</divisions>
-<key>
-    <fifths>{fifths_number}</fifths>
-</key>
-    """)
-
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
-    return render_template("key_signature_page.html", feedback=feedback_content, music_svg=music_svg)
 
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
@@ -144,74 +83,37 @@ def pitch_audio_page():
                             audio_file_name=audio_file_name,
                             )
 
-
-@app.route("/chords", methods=["GET", "POST"])
-def chord_page():
-    global current_chord_answer
-
-    # Handle user input
-    feedback: str = ""
-    if (request.method == "POST"):
-        user_answer: str = request.form.get("chord-answer")
-        if (current_chord_answer != ""):
-            feedback = ("Correct!" if user_answer == current_chord_answer 
-                        else "Wrong!")
-            feedback += f" The correct answer was \"{current_chord_answer}\"."
-
-    # Generate a chord and access its metadata
+@app.route("/chord-generate")
+def chord_generate() -> str:
     chord_info: ChordInfo = ChordGenerator.generate()
-    answer: str = chord_info.chord_name
-    current_chord_answer = answer
-
-    # Generate the notes and render
-    notes_xml: str = chord_info.xml
-    xml: str = music_single_staff_xml(notes_xml)
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
-
-    return render_template(
-        "chord_page.html", 
-        music_svg=music_svg, 
-        feedback=feedback)
+    return chord_info.__dict__
 
 
-@app.route("/scales", methods=["GET", "POST"])
-def scale_page():
-    global current_scale
+@app.route("/chords")
+def chord_page():
+    return render_template("chord_page.html")
 
-    # evaluate user input
-    answer_result: str = ""
-    if request.method == "POST":
-        user_input: str = request.form.get("user-input")
-        if (user_input == current_scale):
-            answer_result = f"Correct! That was \"{current_scale}\"."
-        else:
-            answer_result = f"Wrong! The previous scale answer was \"{current_scale}\"."
 
-    # generate random scale
+@app.route("/scale-generate")
+def fetch_scale_svg() -> str:
     scale_info: ScaleInfo = ScaleGenerator.generate()
+    return scale_info.__dict__
 
-    real_answer: str = scale_info.scale_name 
-    current_scale = real_answer
 
-    # render the scale on the page
-    notes_xml: str = scale_info.xml
-    xml: str = music_single_staff_xml(notes_xml)
-    tk.loadData(xml)
-    music_svg: str = tk.renderToSVG(1)
+@app.route("/scales")
+def scale_page():
+    return render_template("scale_page.html")
 
-    return render_template(
-        "scale_page.html", 
-        music_svg=music_svg, 
-        answer_result=answer_result)
 
 @app.route("/about")
 def about_page():
     return render_template("about.html")
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run()

@@ -1,18 +1,19 @@
 {% extends "layout.html" %}
 {% block main %}
-    <section class="main-content">
+    <section class="main-content" id="scale-page">
         <h1>Scale Identification Practice</h1>
-        <div>{{ answer_result }}</div>
+        <div class="answer-result" id="scale-answer-result">
+        </div>
 
         <!-- <div>Example: "G# minor", "Ab major", "A# locrian", "D natural minor", "D harmonic minor"</div> -->
-        <form method="post">
-            <label for="user-input">What is the scale below?</label>
-            <input name="user-input" id="user-input" autofocus="true" autocomplete="off" required="true">
-            <button type="submit">Submit</button>
+        <form>
+            <label for="scale-answer">What is the scale below?</label>
+            <input name="scale-answer" id="scale-answer"
+            autofocus="true" autocomplete="off" required="true">
+            <button id="scale-submit" type="submit">Submit</button>
         </form>
         
-        <section style="width:40vw">
-            {{ music_svg | safe }}
+        <section id="scale-svg-section" class="music-svg-section" style="width:40vw">
         </section>
 
         <h2 class="answer-choice-heading">Example Answers: </h2>
@@ -28,4 +29,5 @@
             <div>A# locrian</div>
         </answer-choice-grid>
     </section>
+    <script src="{{ url_for('static', filename='/js/single-staff-page.js') }}"></script>
 {% endblock %}

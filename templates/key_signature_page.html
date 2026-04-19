@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<section class="main-content">
+<section class="main-content" id="keysig-page">
     <h1>Key Signature Identification Practice</h1>
-    <div>{{ feedback }}</div>
-    <form method="post">
-        <label for="major-key-name">What is the major key below?</label>
-        <input name="major-key-name" autofocus="true" required="true" autocomplete="off"></input>
-        <label for="minor-key-name">What is the relative minor key below?</label>
-        <input name="minor-key-name" autofocus="true" required="true" autocomplete="off"></input>
-        <button type="submit">Submit</button>
+    <div class="answer-result" id="keysig-answer-result">{{ feedback }}</div>
+    <form>
+        <label for="major-key-answer">What is the major key below?</label>
+        <input id="major-key-answer" name="major-key-answer" autofocus="true" required="true" autocomplete="off"></input>
+        <label for="minor-key-answer">What is the relative minor key below?</label>
+        <input id="minor-key-answer" name="minor-key-answer" autofocus="true" required="true" autocomplete="off"></input>
+        <button id="keysig-submit" type="submit">Submit</button>
     </form>
-    <section style="width:20vw; max-height:140px">
+    <section id="keysig-svg-section" class="music-svg-section" style="width:20vw; max-height:140px">
         {{ music_svg | safe }}
     </section>
 
@@ -48,5 +48,6 @@
         <div>Eb minor</div>
         <div>Ab minor</div>
     </answer-choice-grid>
+    <script src="{{ url_for('static', filename='/js/single-staff-page.js')}}"></script>
 </section>
 {% endblock %}

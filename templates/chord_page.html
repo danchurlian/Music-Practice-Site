@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 {% block main %}
-    <section class="main-content">
+    <section class="main-content" id="chord-page">
         <h1>Chord Identification Practice </h1>
-        <div>{{ feedback }}</div>
+        <div class="answer-result" id="chord-answer-result" >{{ feedback }}</div>
 
-        <form method="post">
+        <form>
             <label for="chord-answer">What is the name of this chord?</label>
-            <input name="chord-answer" autocomplete="off" autofocus="true" />
-            <button type="submit">Submit</button>
+            <input id="chord-answer" name="chord-answer" autocomplete="off" autofocus="true" />
+            <button id="chord-submit" type="submit">Submit</button>
         </form>
 
-        <section style="width:23vw">
+        <section id="chord-svg-section" class="music-svg-section" style="width:23vw">
             {{ music_svg | safe }}
         </section>
 
@@ -27,4 +27,5 @@
             <div>C minor 7th</div>
         </answer-choice-grid>
     </section>
+    <script src="{{ url_for('static', filename='/js/single-staff-page.js') }}"></script>
 {% endblock %}
