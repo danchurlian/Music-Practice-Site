@@ -37,6 +37,9 @@ class KeySignatureInfo:
         self.minor_name = minor_name
         self.xml = xml
         self.svg = svg
+        
+        setattr(self, "major-key-answer", self.major_name)
+        setattr(self, "minor-key-answer", self.minor_name)
 
 
 

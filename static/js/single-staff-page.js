@@ -6,7 +6,7 @@ const answerResultDiv = document.getElementById("scale-answer-result");
 // Change this later
 const userInputField = document.getElementById("scale-answer");
 const submitButton = document.getElementById("scale-submit");
-const svgSection = document.getElementById("scale-svg-section");
+const svgSection = document.querySelector(".music-svg-section");
 const form = document.querySelector("form");
 
 const answers = {
@@ -22,32 +22,36 @@ const answers = {
 
 const SVG_LINKS = {
     "scale-page": "/scale-generate",
+    "keysig-page": "/key-signature-generate",
 };
 
 
 const loadPageSvg = (aPageId, aSvgSection) => {
     // Generate a new scale.
+    const fetchLink = SVG_LINKS[aPageId];
+    console.assert(fetchLink, "Fetching link is not defined for this page");
+    console.assert(aSvgSection !== null, "svg is not given!");
     fetch(SVG_LINKS[aPageId])
-        .then(result => result.json())
-        .then(infoJson => {
-            /* Change the global state */
-            for (key of Object.keys(answers[PAGE_ID])) {
-                answers[PAGE_ID][key] = infoJson[key];
-                console.log(`Set global answer ${key} to 
-                    ${infoJson[key]}`);
-            }
+    .then(result => result.json())
+    .then(infoJson => {
+        /* Change the global state */
+        for (key of Object.keys(answers[PAGE_ID])) {
+            answers[PAGE_ID][key] = infoJson[key];
+            console.log(`Set global answer ${key} to 
+                ${infoJson[key]}`);
+        }
+        console.log(`Global answers set to 
+            ${JSON.stringify(answers[PAGE_ID])}`);
 
-            // Change this later
-            answers[aPageId]["scale-answer"] = infoJson.scale_name;
-            console.log(`Global answers set to 
-                ${JSON.stringify(answers[PAGE_ID])}`);
-
-            // Create a new element with the SVG inside
-            const div = document.createElement("div");
-            div.innerHTML = infoJson.svg;
-            aSvgSection.replaceChildren();
-            aSvgSection.appendChild(div);
-        });
+        // Create a new element with the SVG inside
+        const div = document.createElement("div");
+        div.innerHTML = infoJson.svg;
+        aSvgSection.replaceChildren();
+        aSvgSection.appendChild(div);
+    })
+    .catch(error => {
+        console.error(`Error rendering music SVG: ${error}`);
+    });
 }
 
 const loadNewScaleSvg = () => {
