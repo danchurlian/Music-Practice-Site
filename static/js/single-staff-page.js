@@ -88,7 +88,19 @@ form.addEventListener("submit", (event) => {
     }
 
     answerResultDiv.innerHTML = correct ? "Correct!" : "Wrong!";
-    answerResultDiv.innerHTML += ` that was a following...`;
+    answerResultDiv.innerHTML += ` Correct answer: `;
+
+    // Get the answer string 
+    let answerStr = "";
+    const valuesArray = Object.values(currentAnswers);
+    answerStr += valuesArray[0];
+    
+    // Keep in mind the delimiter only works because the max amount of input
+    // fields is the key signature page with 2 fields.
+    for (let i = 1; i < valuesArray.length; ++i)
+        answerStr += ` and ${valuesArray[i]}`;
+
+    answerResultDiv.innerHTML += answerStr + ".";
 
     // We must iterate through a list of user input fields and clear them all
     // using a for loop. 
