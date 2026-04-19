@@ -14,6 +14,10 @@ const answers = {
         "scale-answer": "None",
     },
 
+    "chord-page": {
+        "chord-answer": "None",
+    },
+
     "keysig-page": {
         "major-key-answer": "None",
         "minor-key-answer": "None",
@@ -22,6 +26,7 @@ const answers = {
 
 const SVG_LINKS = {
     "scale-page": "/scale-generate",
+    "chord-page": "/chord-generate",
     "keysig-page": "/key-signature-generate",
 };
 

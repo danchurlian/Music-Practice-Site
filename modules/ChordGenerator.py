@@ -92,6 +92,8 @@ class ChordInfo:
         self.xml = xml
         self.svg = svg
 
+        setattr(self, "chord-answer", self.chord_name)
+
 
 class ChordGenerator:
     def generate():
