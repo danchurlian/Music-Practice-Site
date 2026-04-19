@@ -145,6 +145,10 @@ class ScaleInfo(object):
             scale_mode, 
             start_accidental)
         self.svg = svg
+        
+        # Answer fields go here. They have to use hyphens
+        # Use setattr() to add scale-answer to the thing
+        setattr(self, "scale-answer", self.scale_name)
 
 
 class ScaleGenerator:

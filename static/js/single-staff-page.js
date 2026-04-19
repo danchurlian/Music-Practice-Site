@@ -12,37 +12,35 @@ const form = document.querySelector("form");
 const answers = {
     "scale-page": {
         "scale-answer": "None",
-    }
+    },
+
+    "keysig-page": {
+        "major-key-answer": "None",
+        "minor-key-answer": "None",
+    },
 };
 
 const SVG_LINKS = {
     "scale-page": "/scale-generate",
 };
 
-const loadNewScaleSvg = () => {
-    // Generate a new scale.
-    fetch(SVG_LINKS["scale-page"])
-        .then(result => result.json())
-        .then(scaleInfoJson => {
-            answers[PAGE_ID]["scale-answer"] = scaleInfoJson.scale_name;
-            console.log(`Answer ${answers[PAGE_ID]}`);
-
-            // Create a new element with the SVG inside
-            const div = document.createElement("div");
-            div.innerHTML = scaleInfoJson.svg;
-            svgSection.replaceChildren();
-            svgSection.appendChild(div);
-        });
-}
 
 const loadPageSvg = (aPageId, aSvgSection) => {
     // Generate a new scale.
     fetch(SVG_LINKS[aPageId])
         .then(result => result.json())
         .then(infoJson => {
+            /* Change the global state */
+            for (key of Object.keys(answers[PAGE_ID])) {
+                answers[PAGE_ID][key] = infoJson[key];
+                console.log(`Set global answer ${key} to 
+                    ${infoJson[key]}`);
+            }
+
             // Change this later
             answers[aPageId]["scale-answer"] = infoJson.scale_name;
-            console.log(`Answer object ${answers[aPageId]}`);
+            console.log(`Global answers set to 
+                ${JSON.stringify(answers[PAGE_ID])}`);
 
             // Create a new element with the SVG inside
             const div = document.createElement("div");
@@ -50,6 +48,10 @@ const loadPageSvg = (aPageId, aSvgSection) => {
             aSvgSection.replaceChildren();
             aSvgSection.appendChild(div);
         });
+}
+
+const loadNewScaleSvg = () => {
+    loadPageSvg(PAGE_ID, svgSection);
 }
 
 /* When the webpage is loaded, this function calls the
