@@ -15,9 +15,13 @@ const answers = {
     }
 };
 
+const SVG_LINKS = {
+    "scale-page": "/scale-generate",
+};
+
 const loadNewScaleSvg = () => {
     // Generate a new scale.
-    fetch("/scale-generate")
+    fetch(SVG_LINKS["scale-page"])
         .then(result => result.json())
         .then(scaleInfoJson => {
             answers[PAGE_ID]["scale-user-answer"] = scaleInfoJson.scale_name;
