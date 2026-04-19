@@ -1,10 +1,10 @@
 const mainSection = document.querySelector(".main-content");
 const PAGE_ID = mainSection.id;
 
-const answerResultDiv = document.getElementById("scale-answer-result");
+const answerResultDiv = document.querySelector(".answer-result");
 
 // Change this later
-const userInputField = document.getElementById("scale-answer");
+const userInputFields = document.querySelectorAll("input");
 const submitButton = document.getElementById("scale-submit");
 const svgSection = document.querySelector(".music-svg-section");
 const form = document.querySelector("form");
@@ -94,7 +94,11 @@ form.addEventListener("submit", (event) => {
     answerResultDiv.innerHTML = correct ? "Correct!" : "Wrong!";
     answerResultDiv.innerHTML += ` that was a following...`;
 
-    userInputField.value = "";
+    // We must iterate through a list of user input fields and clear them all
+    // using a for loop. 
+    // Also focus on the top-most user input field.
+    userInputFields.forEach(userInputField => userInputField.value = "");
+    userInputFields[0].focus();
 
     loadNewScaleSvg();
 })
