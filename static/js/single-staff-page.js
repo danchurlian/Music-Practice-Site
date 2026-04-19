@@ -37,11 +37,7 @@ const loadPageSvg = (aPageId, aSvgSection) => {
         /* Change the global state */
         for (key of Object.keys(answers[PAGE_ID])) {
             answers[PAGE_ID][key] = infoJson[key];
-            console.log(`Set global answer ${key} to 
-                ${infoJson[key]}`);
         }
-        console.log(`Global answers set to 
-            ${JSON.stringify(answers[PAGE_ID])}`);
 
         // Create a new element with the SVG inside
         const div = document.createElement("div");
@@ -77,16 +73,13 @@ form.addEventListener("submit", (event) => {
     // Retrieve the scale name guess and evaluate it
     const formData = new FormData(event.target);
     const currentAnswers = answers[PAGE_ID]; 
-    console.log(PAGE_ID + " " +currentAnswers);
 
     // Get the list of key-value pairs of the user's inputs
     // Compare them one by one to the current state of the web page
     let correct = true;
 
     for (const key of formData.keys()) {
-        console.log(`Entry ${key} ${formData.get(key)} ${currentAnswers[key]}`);
         if (formData.get(key) != currentAnswers[key]) {
-            console.log("Mismatch!");
             correct = false;
         }
     }
