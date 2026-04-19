@@ -50,16 +50,14 @@ const loadPageSvg = (aPageId, aSvgSection) => {
     });
 }
 
-const loadNewScaleSvg = () => {
+const generateSvgProblem = () => {
     loadPageSvg(PAGE_ID, svgSection);
 }
 
 /* When the webpage is loaded, this function calls the
 load scale svg method.
 */
-document.addEventListener("DOMContentLoaded", () => {
-    loadNewScaleSvg();
-})
+document.addEventListener("DOMContentLoaded", generateSvgProblem);
 
 
 /* When the user submits the form, this function handles
@@ -93,5 +91,5 @@ form.addEventListener("submit", (event) => {
     userInputFields.forEach(userInputField => userInputField.value = "");
     userInputFields[0].focus();
 
-    loadNewScaleSvg();
+    generateSvgProblem();
 })
