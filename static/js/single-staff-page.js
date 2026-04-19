@@ -35,6 +35,23 @@ const loadNewScaleSvg = () => {
         });
 }
 
+const loadPageSvg = (aPageId, aSvgSection) => {
+    // Generate a new scale.
+    fetch(SVG_LINKS[aPageId])
+        .then(result => result.json())
+        .then(infoJson => {
+            // Change this later
+            answers[aPageId]["scale-user-answer"] = infoJson.scale_name;
+            console.log(`Answer object ${answers[aPageId]}`);
+
+            // Create a new element with the SVG inside
+            const div = document.createElement("div");
+            div.innerHTML = infoJson.svg;
+            aSvgSection.replaceChildren();
+            aSvgSection.appendChild(div);
+        });
+}
+
 /* When the webpage is loaded, this function calls the
 load scale svg method.
 */
