@@ -4,14 +4,14 @@ const PAGE_ID = mainSection.id;
 const answerResultDiv = document.getElementById("scale-answer-result");
 
 // Change this later
-const userInputField = document.getElementById("scale-user-answer");
+const userInputField = document.getElementById("scale-answer");
 const submitButton = document.getElementById("scale-submit");
 const svgSection = document.getElementById("scale-svg-section");
 const form = document.querySelector("form");
 
 const answers = {
     "scale-page": {
-        "scale-user-answer": "None",
+        "scale-answer": "None",
     }
 };
 
@@ -24,7 +24,7 @@ const loadNewScaleSvg = () => {
     fetch(SVG_LINKS["scale-page"])
         .then(result => result.json())
         .then(scaleInfoJson => {
-            answers[PAGE_ID]["scale-user-answer"] = scaleInfoJson.scale_name;
+            answers[PAGE_ID]["scale-answer"] = scaleInfoJson.scale_name;
             console.log(`Answer ${answers[PAGE_ID]}`);
 
             // Create a new element with the SVG inside
@@ -41,7 +41,7 @@ const loadPageSvg = (aPageId, aSvgSection) => {
         .then(result => result.json())
         .then(infoJson => {
             // Change this later
-            answers[aPageId]["scale-user-answer"] = infoJson.scale_name;
+            answers[aPageId]["scale-answer"] = infoJson.scale_name;
             console.log(`Answer object ${answers[aPageId]}`);
 
             // Create a new element with the SVG inside
