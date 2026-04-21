@@ -80,8 +80,10 @@ form.addEventListener("submit", (event) => {
     let correct = true;
 
     for (const key of formData.keys()) {
-        if (formData.get(key) != currentAnswers[key]) {
+        if (formData.get(key).toLowerCase()
+            != currentAnswers[key].toLowerCase()) {
             correct = false;
+            break;
         }
     }
 
