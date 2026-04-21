@@ -18,19 +18,9 @@
         <input name="user-answer" autocomplete="off" autofocus="true" required="true" />
         <button type="submit">Submit</button>
     </form>
-    <script type="module">
-        const randomPitchCode = Number("{{ random_code }}")
-        
-        import {playAudio} from "../static/js/audio-handler.js"
-        let refButton = document.getElementById("reference-button");
-        let randomButton = document.getElementById("random-pitch-button");
-
-        refButton.addEventListener("mouseup", () => {
-            playAudio(1);
-        })
-        randomButton.addEventListener("mouseup", () => {
-            playAudio(randomPitchCode);
-        })
+    <script 
+        type="module" 
+        src="{{ url_for('static', filename='/js/pitch-audio-page.js')}}">
     </script>
 </section>
 {% endblock %}
