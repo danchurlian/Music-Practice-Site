@@ -3,9 +3,7 @@ const PAGE_ID = mainSection.id;
 
 const answerResultDiv = document.querySelector(".answer-result");
 
-// Change this later
 const userInputFields = document.querySelectorAll("input");
-const submitButton = document.getElementById("scale-submit");
 const svgSection = document.querySelector(".music-svg-section");
 const form = document.querySelector("form");
 
@@ -82,8 +80,10 @@ form.addEventListener("submit", (event) => {
     let correct = true;
 
     for (const key of formData.keys()) {
-        if (formData.get(key) != currentAnswers[key]) {
+        if (formData.get(key).toLowerCase()
+            != currentAnswers[key].toLowerCase()) {
             correct = false;
+            break;
         }
     }
 
