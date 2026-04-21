@@ -33,7 +33,7 @@ def pitch_interval_page():
 
     info: PitchIntervalInfo = PitchIntervalGenerator.generate()
     current_pitch_interval_answer = info.answer
-    return render_template("pitch_interval_page.html",
+    return render_template("pitch-interval-page.html",
                            note_1=info.note_num_1, note_2=info.note_num_2,
                            feedback=feedback)
 
@@ -47,7 +47,7 @@ def key_signature_generate():
 # Generate a key signature based a single fifths_number from [-7, 7] inclusive.
 @app.route("/key-signature")
 def key_signature_page():
-    return render_template("key_signature_page.html")
+    return render_template("key-signature-page.html")
 
 
 
@@ -76,7 +76,7 @@ def pitch_audio_page():
     current_pitch_answer = random_code
     audio_file_name: str = f"note{random_code}.mp3"
     
-    return render_template("pitch_audio_page.html",
+    return render_template("pitch-audio-page.html",
                             reference_code=reference_code, 
                             random_code=random_code,
                             feedback=feedback,
@@ -91,7 +91,7 @@ def chord_generate() -> str:
 
 @app.route("/chords")
 def chord_page():
-    return render_template("chord_page.html")
+    return render_template("chord-page.html")
 
 
 @app.route("/scale-generate")
@@ -102,7 +102,7 @@ def fetch_scale_svg() -> str:
 
 @app.route("/scales")
 def scale_page():
-    return render_template("scale_page.html")
+    return render_template("scale-page.html")
 
 
 @app.route("/about")
