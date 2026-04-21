@@ -37,7 +37,7 @@ def render_single_staff_template(additional_attributes_xml="", notes_xml="") -> 
 
     attributes_xml: str = "<divisions>1</divisions>"
 
-    template: Template = jinja_env.get_template("single_staff_template.xml")
+    template: Template = jinja_env.get_template("single-staff-template.xml")
     total_xml: musicxml_str = template.render(
         attributes = attributes_xml + additional_attributes_xml, 
         notes = notes_xml)
