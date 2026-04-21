@@ -3,9 +3,7 @@ const PAGE_ID = mainSection.id;
 
 const answerResultDiv = document.querySelector(".answer-result");
 
-// Change this later
 const userInputFields = document.querySelectorAll("input");
-const submitButton = document.getElementById("scale-submit");
 const svgSection = document.querySelector(".music-svg-section");
 const form = document.querySelector("form");
 
