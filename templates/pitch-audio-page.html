@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<section class="main-content">
+<section class="main-content" id="pitch-audio-page" >
     <h1>Pitch Identification Practice</h1>
 
     <div>{{ feedback }} </div>
@@ -14,8 +14,8 @@
         <button class="listen-button" id="random-pitch-button">Listen</button>
     </figure>
     <form method="POST">
-        <label for="user-answer">Note name: </label>
-        <input name="user-answer" autocomplete="off" autofocus="true" required="true" />
+        <label for="random-pitch-answer">Note name: </label>
+        <input name="random-pitch-answer" autocomplete="off" autofocus="true" required="true" />
         <button type="submit">Submit</button>
     </form>
     <script 
