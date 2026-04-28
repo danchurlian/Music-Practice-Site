@@ -50,6 +50,48 @@ def key_signature_page():
     return render_template("key-signature-page.html")
 
 
+@app.route("/notenumber")
+def notenumber_api():
+    # Use a dictionary that maps the note name from the query to a number
+    # return the value from the dictionary
+    codes: dict = {
+        "c": 1,
+        "cs": 2,
+        "db": 2,
+        "d": 3,
+        "ds": 4,
+        "eb": 4,
+        "e": 5,
+        "f": 6,
+        "fs": 7,
+        "gb": 7,
+        "g": 8,
+        "gs": 9,
+        "ab": 9,
+        "a": 10,
+        "as": 11,
+        "bb": 11,
+        "b": 12,
+    }
+    
+    # The user MUST have entered in a query that contains the note name.
+    # Get the query and check if the input is valid
+    # the query should look like "cs" for C# (hashtags are not escaped
+    # in HTTP get queries)
+    # Get the corresponding note number (C# --> 2) and return it as a string
+    # If any of the conditions fail, the result returns an error message.
+    result: str = "Invalid note query"
+    user_query: str = request.query_string.decode()
+    split: list  = user_query.split("=")
+
+    if len(split) > 1:
+        notename_query: str = split[1]
+        print(f"The request query was {notename_query}")
+        if notename_query in codes:
+            result = f"{codes[notename_query]}"
+
+    return result
+
 
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
