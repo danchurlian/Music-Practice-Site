@@ -88,7 +88,6 @@ def notenumber_api():
 
     if len(split) > 1:
         notename_query: str = split[1]
-        print(f"The request query was {notename_query}")
         if notename_query in codes:
             result = f"{codes[notename_query]}"
 

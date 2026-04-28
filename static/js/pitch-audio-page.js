@@ -1,7 +1,5 @@
 import {playAudio} from "./audio-handler.js";
 
-let randomPitchCode = null;
-
 let refButton = document.getElementById("reference-button");
 let randomButton = document.getElementById("random-pitch-button");
 let form = document.querySelector("form");
@@ -12,7 +10,8 @@ const answers = {
     }
 };
 
-// TOOD: Add setting the answer in this method
+// Generates a new random code number
+// SIDE EFFECT: Changes the global answers state
 const newRandomPitchCode = () => {
     const result = Math.floor((Math.random() * 13 + 1));
     answers["pitch-audio-page"]["current-pitch-number-answer"] = result;
@@ -20,13 +19,13 @@ const newRandomPitchCode = () => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    randomPitchCode = newRandomPitchCode();
+    newRandomPitchCode();
 });
 refButton.addEventListener("mouseup", () => {
     playAudio(1);
 });
 randomButton.addEventListener("mouseup", () => {
-    playAudio(randomPitchCode);
+    playAudio(answers["pitch-audio-page"]["current-pitch-number-answer"]);
 });
 
 // On user submit
@@ -51,15 +50,28 @@ form.addEventListener("submit", (event) => {
     fetch(`/notenumber?ans=${userAns}`)
         .then(result => result.text())
         .then(text => {
+            // Evaluating the user input if possible
             try {
                 const noteCode = parseInt(text);
-                console.log(`Backend notecode result: ${noteCode}`)
+                
+                // Compare with the answer in the global state the compare
+                const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
+
+                console.log(`Current answer: ${currentAnswer} 
+                    | User answer: ${noteCode}`);
+
+                console.log(currentAnswer === noteCode ? 
+                    "That is right!" : "Wrong!");
+
             } catch {
                 console.log("Failed to parse number");
             }
-        })
-    
 
-    // Generate a new audio
-    randomPitchCode = newRandomPitchCode();
+            // Generate a new audio
+            newRandomPitchCode();
+        })
+        .catch(err => {
+            console.error("Failed to fetch /notenumber");
+        });
+    
 })
