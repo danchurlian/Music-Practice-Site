@@ -5,6 +5,7 @@ const refButton = document.getElementById("reference-button");
 const randomButton = document.getElementById("random-pitch-button");
 const form = document.querySelector("form");
 const answerResultDiv = document.querySelector(".answer-result");
+const userInputField = document.querySelector("input");
 
 
 // Mutable global state
@@ -76,6 +77,9 @@ form.addEventListener("submit", (event) => {
 
             // Generate a new audio
             newRandomPitchCode();
+
+            // Clear the input of the user input
+            userInputField.value = "";
         })
         .catch(err => {
             console.error("Failed to fetch /notenumber");
