@@ -55,6 +55,7 @@ def notenumber_api():
     # Use a dictionary that maps the note name from the query to a number
     # return the value from the dictionary
     codes: dict = {
+        "bs": 1,
         "c": 1,
         "cs": 2,
         "db": 2,
@@ -72,6 +73,7 @@ def notenumber_api():
         "as": 11,
         "bb": 11,
         "b": 12,
+        "cb": 12,
     }
     
     # The user MUST have entered in a query that contains the note name.
