@@ -1,14 +1,19 @@
 import {playAudio} from "./audio-handler.js";
 
-let refButton = document.getElementById("reference-button");
-let randomButton = document.getElementById("random-pitch-button");
-let form = document.querySelector("form");
+// HTML elements 
+const refButton = document.getElementById("reference-button");
+const randomButton = document.getElementById("random-pitch-button");
+const form = document.querySelector("form");
+const answerResultDiv = document.querySelector(".answer-result");
 
+
+// Mutable global state
 const answers = {
     "pitch-audio-page": {
         "current-pitch-number-answer": 0,
     }
 };
+
 
 // Generates a new random code number
 // SIDE EFFECT: Changes the global answers state
@@ -18,12 +23,16 @@ const newRandomPitchCode = () => {
     return result;
 }
 
+// ------------------------------------------------------------------------
+
 document.addEventListener("DOMContentLoaded", () => {
     newRandomPitchCode();
 });
+
 refButton.addEventListener("mouseup", () => {
     playAudio(1);
 });
+
 randomButton.addEventListener("mouseup", () => {
     playAudio(answers["pitch-audio-page"]["current-pitch-number-answer"]);
 });
@@ -32,7 +41,6 @@ randomButton.addEventListener("mouseup", () => {
 form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    console.log("Submitted");
     const formData = new FormData(event.target);
 
     // Get the user input
@@ -45,7 +53,6 @@ form.addEventListener("submit", (event) => {
     // TODO: Call the backend with (user input, current answer), 
     // backend converts user input which is a note name
     // into a number and see if it matches the answer
-    console.log(userAns);
 
     fetch(`/notenumber?ans=${userAns}`)
         .then(result => result.text())
@@ -56,12 +63,12 @@ form.addEventListener("submit", (event) => {
                 
                 // Compare with the answer in the global state the compare
                 const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
-
-                console.log(`Current answer: ${currentAnswer} 
-                    | User answer: ${noteCode}`);
-
-                console.log(currentAnswer === noteCode ? 
-                    "That is right!" : "Wrong!");
+                
+                // Compare and put the result in the answer result div
+                let feedbackString = currentAnswer === noteCode ? 
+                    "Correct!" : "Wrong!";
+                feedbackString += " That was a [note name]."
+                answerResultDiv.innerHTML = feedbackString;
 
             } catch {
                 console.log("Failed to parse number");
@@ -73,5 +80,4 @@ form.addEventListener("submit", (event) => {
         .catch(err => {
             console.error("Failed to fetch /notenumber");
         });
-    
 })
