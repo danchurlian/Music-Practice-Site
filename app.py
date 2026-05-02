@@ -110,6 +110,7 @@ def notenumber_to_name_api():
         "A",
         "A# or Bb",
         "B or Cb",
+        "C or B#"
     ]
 
     notenumber_query: str = request.query_string.decode()
