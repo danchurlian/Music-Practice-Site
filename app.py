@@ -94,6 +94,37 @@ def notenumber_api():
     return result
 
 
+@app.route("/notenumber-to-name")
+def notenumber_to_name_api():
+    map: list = [
+        "Undefined note",
+        "C or B#",
+        "C# or Db",
+        "D",
+        "D# or Eb",
+        "E or Fb",
+        "F or E#",
+        "F# or Gb",
+        "G",
+        "G# or Ab",
+        "A",
+        "A# or Bb",
+        "B or Cb",
+    ]
+
+    notenumber_query: str = request.query_string.decode()
+    notenumber: int = None
+
+    # check if valid string and number parsing
+        # return map[number], return that string
+    # else return an error message
+    try:
+        notenumber = int(notenumber_query)
+        return map[notenumber]
+    except Exception:
+        print(f"Invalid query {notenumber_query}")
+        return "Invalid number"
+
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
     global current_pitch_answer
