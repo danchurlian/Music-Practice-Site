@@ -53,6 +53,7 @@ async function onSubmit(event) {
 
 
     // Compare with the answer in the global state the compare
+    // The current answer is the pitch number of the random note
     const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
 
     // TODO: Call the backend with (user input, current answer), 
@@ -70,22 +71,21 @@ async function onSubmit(event) {
         `/notenumber-to-name?${currentAnswer}`
     );
     const actualNoteAnswer = await(actualAnswerResult.text());
-
+    let feedbackString = "Wrong!";
 
     // Evaluating the user input if possible
     try {
         const noteCode = parseInt(noteNumberApiResultText);
         
         // Compare and put the result in the answer result div
-        let feedbackString = currentAnswer === noteCode ? 
-            "Correct!" : "Wrong!";
+        if (currentAnswer === noteCode)
+            feedbackString = "Correct!";
+    } catch (err) {
+        console.log(`Failed to parse number. Error: ${err}`);
+    } finally {
         feedbackString += ` That was a ${actualNoteAnswer}.`;
-        answerResultDiv.innerHTML = feedbackString;
-
-    } catch {
-        console.log("Failed to parse number");
+        answerResultDiv.textContent = feedbackString;
     }
-
 
     // Clear the input of the user input
     userInputField.value = "";
