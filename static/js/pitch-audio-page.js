@@ -51,31 +51,36 @@ async function onSubmit(event) {
                             .toLowerCase()
                             .replace("#", "s");
 
-
-    // Compare with the answer in the global state the compare
-    // The current answer is the pitch number of the random note
+    // The pitch number of the random note
     const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
 
     // TODO: Call the backend with (user input, current answer), 
     // backend converts user input which is a note name
     // into a number and see if it matches the answer
 
-    // Call the backend to get the note number that the user added.
-    const noteNumberApiResult = await fetch(`/notenumber?ans=${userAns}`);
-    const noteNumberApiResultText = await noteNumberApiResult.text();
+    const [userNoteNumberString, actualNoteName] = Promise.all([
+
+        // Call the backend to get the note number that the user added.
+        fetch(`/notenumber?ans=${userAns}`)
+            .then(result => result.text()),
+
+        // Get the actual note name answer, which will be stored
+        // in the answer result div
+        fetch(`/notenumber-to-name?${currentAnswer}`)
+            .then(result => result.text()),
+
+    ]).catch(err => {
+        // If one of the fetches fails
+        console.log(`Failed to fetch either the user's note number
+            or the actual note name: ${err}`);
+    });
 
 
-    // Get the actual note name answer, which will be stored
-    // in the answer result div
-    const actualAnswerResult = await fetch(
-        `/notenumber-to-name?${currentAnswer}`
-    );
-    const actualNoteAnswer = await(actualAnswerResult.text());
     let feedbackString = "Wrong!";
 
     // Evaluating the user input if possible
     try {
-        const noteCode = parseInt(noteNumberApiResultText);
+        const noteCode = parseInt(userNoteNumberString);
         
         // Compare and put the result in the answer result div
         if (currentAnswer === noteCode)
@@ -83,7 +88,7 @@ async function onSubmit(event) {
     } catch (err) {
         console.log(`Failed to parse number. Error: ${err}`);
     } finally {
-        feedbackString += ` That was a ${actualNoteAnswer}.`;
+        feedbackString += ` That was a ${actualNoteName}.`;
         answerResultDiv.textContent = feedbackString;
     }
 
