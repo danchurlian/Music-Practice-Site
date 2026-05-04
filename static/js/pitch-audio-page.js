@@ -71,23 +71,15 @@ async function onSubmit(event) {
 
         ]); // Error handling is handled by the surrounding catch block
 
-        let feedbackString = "Wrong!";
 
         // Evaluating the user input if possible
-        try {
-            const noteCode = parseInt(userNoteNumberString);
-            
-            // Compare and put the result in the answer result div
-            if (currentAnswer === noteCode)
-                feedbackString = "Correct!";
-
-        } catch (err) {
-            console.log(`Failed to parse number. Error: ${err}`);
-
-        } finally {
-            feedbackString += ` That was a(n) ${actualNoteName}.`;
-            answerResultDiv.textContent = feedbackString;
-        }
+        const userNoteCode = parseInt(userNoteNumberString);
+        let feedbackString = currentAnswer === userNoteCode
+                                ? "Correct!" : "Wrong!";
+        
+        // Compare and put the result in the answer result div
+        feedbackString += ` That was a(n) ${actualNoteName}.`;
+        answerResultDiv.textContent = feedbackString;
 
     } catch (err) {
         answerResultDiv.textContent = `Error processing user input. 
