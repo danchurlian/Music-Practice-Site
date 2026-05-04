@@ -42,56 +42,58 @@ randomButton.addEventListener("mouseup", () => {
 async function onSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-
-    // Get the user input
-    // turn to lowercase
-    // replace hashtags with s
-    const userAns = formData.get("random-pitch-answer")
-                            .toLowerCase()
-                            .replace("#", "s");
-
-    // The pitch number of the random note
-    const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
-
-    // TODO: Call the backend with (user input, current answer), 
-    // backend converts user input which is a note name
-    // into a number and see if it matches the answer
-
-    const [userNoteNumberString, actualNoteName] = Promise.all([
-
-        // Call the backend to get the note number that the user added.
-        fetch(`/notenumber?ans=${userAns}`)
-            .then(result => result.text()),
-
-        // Get the actual note name answer, which will be stored
-        // in the answer result div
-        fetch(`/notenumber-to-name?${currentAnswer}`)
-            .then(result => result.text()),
-
-    ]).catch(err => {
-        // If one of the fetches fails
-        console.log(`Failed to fetch either the user's note number
-            or the actual note name: ${err}`);
-    });
-
-
-    let feedbackString = "Wrong!";
-
-    // Evaluating the user input if possible
     try {
-        const noteCode = parseInt(userNoteNumberString);
-        
-        // Compare and put the result in the answer result div
-        if (currentAnswer === noteCode)
-            feedbackString = "Correct!";
-    } catch (err) {
-        console.log(`Failed to parse number. Error: ${err}`);
-    } finally {
-        feedbackString += ` That was a ${actualNoteName}.`;
-        answerResultDiv.textContent = feedbackString;
-    }
+        const formData = new FormData(event.target);
 
+        // Get the user input
+        // turn to lowercase
+        // replace hashtags with s
+        const userAns = formData.get("random-pitch-answer")
+                                .toLowerCase()
+                                .replace("#", "s");
+
+        // The pitch number of the random note
+        const currentAnswer = answers["pitch-audio-page"]["current-pitch-number-answer"];
+
+        // Call the backend with (user input, current answer), 
+        // backend converts user input which is a note name
+        // into a number and see if it matches the answer
+        const [userNoteNumberString, actualNoteName] = await Promise.all([
+
+            // Call the backend to get the note number that the user added.
+            fetch(`/notenumber?ans=${userAns}`)
+                .then(result => result.text()),
+
+            // Get the actual note name answer, which will be stored
+            // in the answer result div
+            fetch(`/notenumber-to-name?${currentAnswer}`)
+                .then(result => result.text()),
+
+        ]); // Error handling is handled by the surrounding catch block
+
+        let feedbackString = "Wrong!";
+
+        // Evaluating the user input if possible
+        try {
+            const noteCode = parseInt(userNoteNumberString);
+            
+            // Compare and put the result in the answer result div
+            if (currentAnswer === noteCode)
+                feedbackString = "Correct!";
+
+        } catch (err) {
+            console.log(`Failed to parse number. Error: ${err}`);
+
+        } finally {
+            feedbackString += ` That was a ${actualNoteName}.`;
+            answerResultDiv.textContent = feedbackString;
+        }
+
+    } catch (err) {
+        answerResultDiv.textContent = `Error processing user input. 
+        Generating new random note...`;
+        console.error(`Error submitting data ${err}`)
+    }
     // Clear the input of the user input
     userInputField.value = "";
     // Generate a new audio
