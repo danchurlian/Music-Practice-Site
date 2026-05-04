@@ -85,7 +85,7 @@ async function onSubmit(event) {
             console.log(`Failed to parse number. Error: ${err}`);
 
         } finally {
-            feedbackString += ` That was a ${actualNoteName}.`;
+            feedbackString += ` That was a(n) ${actualNoteName}.`;
             answerResultDiv.textContent = feedbackString;
         }
 
