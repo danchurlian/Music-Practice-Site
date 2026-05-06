@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<section class="main-content">
+<section class="main-content" id="pitch-audio-page" >
     <h1>Pitch Identification Practice</h1>
+    <div class="answer-result" id="scale-answer-result">
+    </div>
 
-    <div>{{ feedback }} </div>
     <figure class="pitch-audio-figure">
         <figcaption>Reference Note: C</figcaption>
         <button class="listen-button" id="reference-button">Listen</button>
@@ -14,23 +15,13 @@
         <button class="listen-button" id="random-pitch-button">Listen</button>
     </figure>
     <form method="POST">
-        <label for="user-answer">Note name: </label>
-        <input name="user-answer" autocomplete="off" autofocus="true" required="true" />
+        <label for="random-pitch-answer">Note name: </label>
+        <input name="random-pitch-answer" autocomplete="off" autofocus="true" required="true" />
         <button type="submit">Submit</button>
     </form>
-    <script type="module">
-        const randomPitchCode = Number("{{ random_code }}")
-        
-        import {playAudio} from "../static/js/audio-handler.js"
-        let refButton = document.getElementById("reference-button");
-        let randomButton = document.getElementById("random-pitch-button");
-
-        refButton.addEventListener("mouseup", () => {
-            playAudio(1);
-        })
-        randomButton.addEventListener("mouseup", () => {
-            playAudio(randomPitchCode);
-        })
+    <script 
+        type="module" 
+        src="{{ url_for('static', filename='/js/pitch-audio-page.js')}}">
     </script>
 </section>
 {% endblock %}
