@@ -29,7 +29,6 @@ async function setNewNotes() {
     noteNum1 = resultJson["note_num_1"];
     noteNum2 = resultJson["note_num_2"];
     curIntervalAnsStr = resultJson["answer"];
-    console.log(`Setting new notes\n${noteNum1} ${noteNum2}`);
 }
 
 
@@ -65,7 +64,6 @@ form.addEventListener("submit", event => {
 button.addEventListener("mouseup", event => {
     if (!playingSound) {
         playingSound = true;
-        console.log(`Playing ${noteNum1} and ${noteNum2}`);
         playAudioAsync(noteNum1);
         playAudioAsync(noteNum2);
 
