@@ -1,9 +1,10 @@
-const AUDIO_BASE_URL = "static/" // Root directory
+const AUDIO_BASE_URL = "./" // Root directory
 // Play plays the appropriate note mp3 file given the noteNumber. 
 const playAudio = (noteNumber) => {
     // Fetch for the mp3 audio file from the backend
     const fileName = `note${noteNumber}.mp3`;
     const url = AUDIO_BASE_URL + fileName;
+    console.log(url);
     fetch(url)
         .then(response => response.blob())
         .then(blob => {
