@@ -1,4 +1,4 @@
-import {playAudio} from "./audio-handler.js"
+import {playAudioAsync} from "./audio-handler.js"
 
 const button = document.getElementById("interval-button");
 const form = document.querySelector("form");
@@ -46,8 +46,8 @@ button.addEventListener("mouseup", event => {
     if (!playingSound) {
         playingSound = true;
         console.log(`Playing ${noteNum1} and ${noteNum2}`);
-        playAudio(noteNum1);
-        playAudio(noteNum2);
+        playAudioAsync(noteNum1);
+        playAudioAsync(noteNum2);
 
         // Disable debounce after waiting for 1.5 seconds
         setTimeout(() => {playingSound = false}, LISTEN_COOLDOWN_MS);

@@ -1,26 +1,25 @@
-const AUDIO_BASE_URL = "./" // Root directory
+const AUDIO_BASE_URL = "/static/" // Root directory
+
 // Play plays the appropriate note mp3 file given the noteNumber. 
-const playAudio = (noteNumber) => {
+async function playAudioAsync(noteNumber) {
     // Fetch for the mp3 audio file from the backend
     const fileName = `note${noteNumber}.mp3`;
     const url = AUDIO_BASE_URL + fileName;
-    console.log(url);
-    fetch(url)
-        .then(response => response.blob())
-        .then(blob => {
-            // Create an audio instance and play it
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            audio.controls = false;
-            document.body.appendChild(audio);
-            audio.play();
 
-            // Destroy the audio element when it is finished playing
-            audio.addEventListener("ended", event => {
-                event.target.remove();
-            });
-        })
-        .catch(() => { console.log("Something happened."); });
+    const blob = await fetch(url).then(result => result.blob());
+
+    // Create an audio instance and play it
+    const audioObjURL = URL.createObjectURL(blob);
+    const audio = new Audio(audioObjURL);
+    audio.controls = false;
+
+    document.body.appendChild(audio);
+    audio.play();
+
+    // Destroy the audio element when it is finished playing
+    audio.addEventListener("ended", event => {
+        event.target.remove();
+    });
 };
 
-export {playAudio} 
+export {playAudioAsync} 
