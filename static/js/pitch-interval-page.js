@@ -37,8 +37,13 @@ form.addEventListener("submit", event => {
 
     // Compare the user's data with the answers above
     // Display correct/wrong on the answer result div
+    answerResultDiv.textContent = 
+        ( formData.get("user-interval-answer") === curIntervalAnsStr ) ?
+        "Correct! " : "Wrong!";
+        
     // Display the right answer on the result div
-    answerResultDiv.textContent = `The interval was \"${curIntervalAnsStr}\"`;
+    answerResultDiv.textContent += 
+        ` The interval was \"${curIntervalAnsStr}\".`;
 
     // Clear the input
     userInputField.value = "";
