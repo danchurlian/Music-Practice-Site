@@ -3,8 +3,8 @@ import {playAudio} from "./audio-handler.js"
 const LISTEN_COOLDOWN_MS = 1500;
 let playingSound = false;
 
-let noteNum1 = Number("{{ note_1 }}");
-let noteNum2 = Number("{{ note_2 }}");
+let noteNum1 = null;
+let noteNum2 = null;
 let curIntervalAnsStr = null;
 
 
@@ -17,8 +17,8 @@ async function setNewNotes() {
     Set the note numbers from the json
     If there is an error of some sort then we are cooked
     */
-    const url = "";
-    const resultJson = await fetch(url)
+    const GENERATE_API_URL = "/pitch-interval-generate";
+    const resultJson = await fetch(GENERATE_API_URL)
         .then(result => result.json());
     
     noteNum1 = resultJson["note_num_1"];

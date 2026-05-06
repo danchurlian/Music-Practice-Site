@@ -17,6 +17,12 @@ current_pitch_interval_answer: str = "'"
 
 
 # WEB PAGE URL FUNCTIONS -------------------------------------------------------
+@app.route("/pitch-interval-generate")
+def pitch_interval_generate():
+    info: PitchIntervalInfo = PitchIntervalGenerator.generate()
+    return info.__dict__
+
+
 @app.route("/pitch-intervals", methods=["GET", "POST"])
 def pitch_interval_page():
     global current_pitch_interval_answer
