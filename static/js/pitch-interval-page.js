@@ -13,7 +13,9 @@ let noteNum2 = null;
 let curIntervalAnsStr = null;
 
 
-/* This function sets the global variables to random numbers */
+/* This function sets the global variables to random numbers
+and also set the answer to the name of the interval.
+*/
 async function setNewNotes() {
     // Fetch the api endpoint
     // Get the json file
@@ -29,6 +31,12 @@ async function setNewNotes() {
     curIntervalAnsStr = resultJson["answer"];
     console.log(`Setting new notes\n${noteNum1} ${noteNum2}`);
 }
+
+
+// Initialize the pitches when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    setNewNotes();
+})
 
 
 form.addEventListener("submit", event => {
