@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request
-import random
 
-from modules.NoteInfoHandler import NoteInfoHandler
 from modules.ScaleGenerator import ScaleGenerator, ScaleInfo
 from modules.ChordGenerator import ChordGenerator, ChordInfo
 from modules.KeySignatureGenerator import (KeySignatureGenerator,
