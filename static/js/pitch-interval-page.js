@@ -2,6 +2,8 @@ import {playAudioAsync} from "./audio-handler.js"
 
 const button = document.getElementById("interval-button");
 const form = document.querySelector("form");
+const userInputField = document.querySelector("input");
+const answerResultDiv = document.querySelector(".answer-result");
 
 const LISTEN_COOLDOWN_MS = 1500;
 let playingSound = false;
@@ -24,7 +26,7 @@ async function setNewNotes() {
     // Set the note numbers from the json
     noteNum1 = resultJson["note_num_1"];
     noteNum2 = resultJson["note_num_2"];
-    curIntervalAnsStr = resultJson[resultJson.answer];
+    curIntervalAnsStr = resultJson["answer"];
     console.log(`Setting new notes\n${noteNum1} ${noteNum2}`);
 }
 
@@ -36,6 +38,11 @@ form.addEventListener("submit", event => {
     // Compare the user's data with the answers above
     // Display correct/wrong on the answer result div
     // Display the right answer on the result div
+    answerResultDiv.textContent = `The interval was \"${curIntervalAnsStr}\"`;
+
+    // Clear the input
+    userInputField.value = "";
+    userInputField.focus();
 
     // Generate the new notes and new answer
     setNewNotes();
