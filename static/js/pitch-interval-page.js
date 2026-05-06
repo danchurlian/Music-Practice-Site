@@ -1,5 +1,8 @@
 import {playAudio} from "./audio-handler.js"
 
+const button = document.getElementById("interval-button");
+const form = document.querySelector("form");
+
 const LISTEN_COOLDOWN_MS = 1500;
 let playingSound = false;
 
@@ -10,24 +13,35 @@ let curIntervalAnsStr = null;
 
 /* This function sets the global variables to random numbers */
 async function setNewNotes() {
-    /* 
-    Fetch the api endpoint
-    Get the json file
-    Set the global answer from the json
-    Set the note numbers from the json
-    If there is an error of some sort then we are cooked
-    */
+    // Fetch the api endpoint
+    // Get the json file
     const GENERATE_API_URL = "/pitch-interval-generate";
     const resultJson = await fetch(GENERATE_API_URL)
         .then(result => result.json());
     
+
+    // Set the global answer from the json
+    // Set the note numbers from the json
     noteNum1 = resultJson["note_num_1"];
-    noteNum1 = resultJson["note_num_2"];
+    noteNum2 = resultJson["note_num_2"];
     curIntervalAnsStr = resultJson[resultJson.answer];
+    console.log(`Setting new notes\n${noteNum1} ${noteNum2}`);
 }
 
 
-const button = document.getElementById("interval-button");
+form.addEventListener("submit", event => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    // Compare the user's data with the answers above
+    // Display correct/wrong on the answer result div
+    // Display the right answer on the result div
+
+    // Generate the new notes and new answer
+    setNewNotes();
+})
+
+
 button.addEventListener("mouseup", event => {
     if (!playingSound) {
         playingSound = true;

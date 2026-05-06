@@ -6,10 +6,10 @@
     <div>{{ feedback }}</div>
     <button class="listen-button" id="interval-button">Listen</button>
     <form method="post">
-        <label for="user-response">
+        <label for="user-interval-answer">
             What is the interval between the notes?
         </label>
-        <input name="user-response" autocomplete="off" autofocus="true" required="true"></input>
+        <input name="user-interval-answer" autocomplete="off" autofocus="true" required="true"></input>
         <button type="submit">Submit</button>
     </form>
     <h2 class="answer-choice-heading">Example Answers: </h2>
@@ -30,6 +30,6 @@
     </answer-choice-grid>
 </section>
 <script type="module"
-    src="{{ url_for('static', filename='/js/pitch-interval-page.js') }}" >
+    src="{{ url_for('static', filename='js/pitch-interval-page.js') }}" >
 </script>
 {% endblock %}
