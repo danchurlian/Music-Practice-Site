@@ -41,11 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
 form.addEventListener("submit", event => {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const userAnsStr = formData.get("user-interval-answer").toLowerCase();
 
     // Compare the user's data with the answers above
     // Display correct/wrong on the answer result div
     answerResultDiv.textContent = 
-        ( formData.get("user-interval-answer") === curIntervalAnsStr ) ?
+        (userAnsStr === curIntervalAnsStr) ?
         "Correct! " : "Wrong!";
         
     // Display the right answer on the result div
