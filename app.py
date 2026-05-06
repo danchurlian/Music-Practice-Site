@@ -126,37 +126,11 @@ def notenumber_to_name_api():
         print(f"Invalid query {notenumber_query}")
         return "Invalid number"
 
+
 @app.route("/pitch-audio", methods=["GET", "POST"])
 def pitch_audio_page():
-    global current_pitch_answer
-    feedback: str = ""
+    return render_template("pitch-audio-page.html")
 
-    if (request.method == "POST"):
-        correct: bool = True
-        user_input: str = request.form.get("user-answer")
-        try:
-            user_code: int = NoteInfoHandler.get_note_code(user_input)
-            correct = user_code == current_pitch_answer
-            print(f"User input {user_input} | note code {user_code}")
-        except ValueError:
-            correct = False 
-
-        feedback = "Correct!" if correct is True else "Wrong!"
-        feedback += (f" That was a(n) {NoteInfoHandler.get_note_name_from_code(current_pitch_answer)}." 
-            if current_pitch_answer is not None 
-            else "")
-        
-    reference_code: int = 1 # middle C
-    random_code: int = random.randint(1, 12)
-    current_pitch_answer = random_code
-    audio_file_name: str = f"note{random_code}.mp3"
-    
-    return render_template("pitch-audio-page.html",
-                            reference_code=reference_code, 
-                            random_code=random_code,
-                            feedback=feedback,
-                            audio_file_name=audio_file_name,
-                            )
 
 @app.route("/chord-generate")
 def chord_generate() -> str:
