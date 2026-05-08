@@ -1,4 +1,4 @@
-import {playAudio} from "./audio-handler.js";
+import {playAudioAsync} from "./audio-handler.js";
 
 // HTML elements 
 const refButton = document.getElementById("reference-button");
@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 refButton.addEventListener("mouseup", () => {
-    playAudio(1);
+    playAudioAsync(1);
 });
 
 randomButton.addEventListener("mouseup", () => {
-    playAudio(answers["pitch-audio-page"]["current-pitch-number-answer"]);
+    playAudioAsync(answers["pitch-audio-page"]["current-pitch-number-answer"]);
 });
 
 
