@@ -7,6 +7,9 @@ const form = document.querySelector("form");
 const answerResultDiv = document.querySelector(".answer-result");
 const userInputField = document.querySelector("input");
 
+const LISTEN_COOLDOWN_MS = 1500;
+let refAudioDebounce = false;
+let randomAudioDebounce = false;
 
 // Mutable global state
 const answers = {
@@ -31,11 +34,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 refButton.addEventListener("mouseup", () => {
-    playAudioAsync(1);
+    if (!refAudioDebounce) {
+        refAudioDebounce = true;
+        playAudioAsync(1);
+        setTimeout(() => { refAudioDebounce = false }, LISTEN_COOLDOWN_MS);
+    }
 });
 
 randomButton.addEventListener("mouseup", () => {
-    playAudioAsync(answers["pitch-audio-page"]["current-pitch-number-answer"]);
+    const noteNum = answers["pitch-audio-page"]["current-pitch-number-answer"];
+
+    if (!randomAudioDebounce) {
+        randomAudioDebounce = true;
+        playAudioAsync(noteNum);
+        setTimeout(() => { randomAudioDebounce = false }, LISTEN_COOLDOWN_MS);
+    }
 });
 
 
