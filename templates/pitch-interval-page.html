@@ -3,13 +3,13 @@
 {% block main %}
 <section class="main-content" id="pitch-interval-main">
     <h1>Pitch Interval Practice</h1>
-    <div>{{ feedback }}</div>
+    <div class="answer-result"></div>
     <button class="listen-button" id="interval-button">Listen</button>
     <form method="post">
-        <label for="user-response">
+        <label for="user-interval-answer">
             What is the interval between the notes?
         </label>
-        <input name="user-response" autocomplete="off" autofocus="true" required="true"></input>
+        <input name="user-interval-answer" autocomplete="off" autofocus="true" required="true"></input>
         <button type="submit">Submit</button>
     </form>
     <h2 class="answer-choice-heading">Example Answers: </h2>
@@ -29,25 +29,7 @@
         <div>perfect octave</div>
     </answer-choice-grid>
 </section>
-<script type="module">
-    import {playAudio} from "../static/js/audio-handler.js"
-
-    const LISTEN_COOLDOWN_MS = 1500;
-    let playingSound = false;
-    const noteNum1 = Number("{{ note_1 }}");
-    const noteNum2 = Number("{{ note_2 }}");
-
-    const button = document.getElementById("interval-button");
-    button.addEventListener("mouseup", event => {
-        if (!playingSound) {
-            playingSound = true;
-            console.log(`Playing ${noteNum1} and ${noteNum2}`);
-            playAudio(noteNum1);
-            playAudio(noteNum2);
-
-            // Disable debounce after waiting for 1.5 seconds
-            setTimeout(() => {playingSound = false}, LISTEN_COOLDOWN_MS);
-        }
-    });
+<script type="module"
+    src="{{ url_for('static', filename='js/pitch-interval-page.js') }}" >
 </script>
 {% endblock %}
