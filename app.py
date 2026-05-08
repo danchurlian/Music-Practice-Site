@@ -23,23 +23,9 @@ def pitch_interval_generate():
     return info.__dict__
 
 
-@app.route("/pitch-intervals", methods=["GET", "POST"])
+@app.route("/pitch-intervals")
 def pitch_interval_page():
-    global current_pitch_interval_answer
-    feedback: str = "You will hear two notes. Identify the interval between them."
-
-    if (request.method == "POST"):
-        # Add answer feedback feedback 
-        user_input: str = request.form["user-response"]
-        print(user_input)
-        feedback = ("Correct! " if user_input == current_pitch_interval_answer else "Wrong! ") 
-        feedback += f"The previous interval was '{current_pitch_interval_answer}'."
-
-    info: PitchIntervalInfo = PitchIntervalGenerator.generate()
-    current_pitch_interval_answer = info.answer
-    return render_template("pitch-interval-page.html",
-                           note_1=info.note_num_1, note_2=info.note_num_2,
-                           feedback=feedback)
+    return render_template("pitch-interval-page.html")
 
 
 @app.route("/key-signature-generate")
