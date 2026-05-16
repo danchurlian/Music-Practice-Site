@@ -38,8 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
 refButton.addEventListener("mouseup", () => {
     if (!refAudioDebounce) {
         refAudioDebounce = true;
+
+        listenButtonPlayOn(refButton);
         playAudioAsync(1);
-        setTimeout(() => { refAudioDebounce = false }, LISTEN_COOLDOWN_MS);
+        setTimeout(() => {
+            refAudioDebounce = false;
+            listenButtonPlayOff(refButton);
+         }, LISTEN_COOLDOWN_MS);
     }
 });
 
