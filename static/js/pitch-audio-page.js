@@ -1,4 +1,6 @@
 import {playAudioAsync} from "./audio-handler.js";
+import {listenButtonPlayOn, listenButtonPlayOff}
+    from "./listen-button-handler.js";
 
 // HTML elements 
 const refButton = document.getElementById("reference-button");
@@ -46,17 +48,13 @@ randomButton.addEventListener("mouseup", () => {
 
     if (!randomAudioDebounce) {
         randomAudioDebounce = true;
-        randomButton.classList.remove("listen-button");
-        randomButton.classList.add("listen-button-nohover");
-        randomButton.classList.add("listen-button--playing");
+        listenButtonPlayOn(randomButton);
         
         playAudioAsync(noteNum);
 
         setTimeout(() => {
             randomAudioDebounce = false;
-            randomButton.classList.remove("listen-button--playing");
-            randomButton.classList.remove("listen-button-nohover");
-            randomButton.classList.add("listen-button");
+            listenButtonPlayOff(randomButton);
         }, LISTEN_COOLDOWN_MS);
     }
 });
