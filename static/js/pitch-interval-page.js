@@ -73,7 +73,7 @@ button.addEventListener("mouseup", event => {
 
         // Disable debounce after waiting for 1.5 seconds
         setTimeout(() => {
-            playingSound = false
+            playingSound = false;
             listenButtonPlayOff(button);
         }, LISTEN_COOLDOWN_MS);
     }
