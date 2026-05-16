@@ -46,8 +46,18 @@ randomButton.addEventListener("mouseup", () => {
 
     if (!randomAudioDebounce) {
         randomAudioDebounce = true;
+        randomButton.classList.remove("listen-button");
+        randomButton.classList.add("listen-button-nohover");
+        randomButton.classList.add("listen-button--playing");
+        
         playAudioAsync(noteNum);
-        setTimeout(() => { randomAudioDebounce = false }, LISTEN_COOLDOWN_MS);
+
+        setTimeout(() => {
+            randomAudioDebounce = false;
+            randomButton.classList.remove("listen-button--playing");
+            randomButton.classList.remove("listen-button-nohover");
+            randomButton.classList.add("listen-button");
+        }, LISTEN_COOLDOWN_MS);
     }
 });
 
